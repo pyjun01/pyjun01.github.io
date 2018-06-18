@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style media="screen">
+    *{user-select: none;}
+    #canvas{border:1px solid #000;position: absolute;box-sizing: border-box;}
+    #where{
+      position: absolute;z-index: 99999;color:#000;font-size:20px;
+      -ms-user-select: none; -moz-user-select: -moz-none; -webkit-user-select: none; -khtml-user-select: none; user-select:none;
+    }
+  </style>
+  <script>
+    let canvas;
+    let ctx;
+    let where;
+    window.onload= () =>{
+      let Fun;
+      document.getElementById("get_f").addEventListener("submit",(e) =>{
+        e.preventDefault();
+        Fun= document.getElementById("Function").value;
+        document.getElementById("Function").value= "";
+        let a=Fun.split("=")[1];
+        console.log(a.indexOf('^'));
+        if(a.indexOf('^')!=-1){
+          console.log(a[a.indexOf('^')]);
+        }
+        // a.map((t) =>{console.log(t);});
+      });
+
+      canvas= document.getElementById('canvas');//canvas
+      ctx= canvas.getContext('2d');//canvas.getContext
+      const _Grid= () =>{
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.width/2);
+        ctx.lineTo(canvas.height, canvas.width/2);
+        ctx.stroke();
+        ctx.moveTo(canvas.height/2, 0);
+        ctx.lineTo(canvas.height/2, canvas.width);
+        ctx.stroke();
+        ctx.closePath();
+        ctx.beginPath();
+        canvas.style.left= (window.innerWidth-canvas.width)/2 +'px';
+        canvas.style.top= (window.innerHeight-canvas.height)/2 +'px';
+      }
+      _Grid();//격자
+
+      ctx.lineCap="round";
+      ctx.lineWidth= 1;
+      ctx.strokeStyle= "#000"
+
+      let press=false;//누르고있는지
+      let dx;let dy;//첫클릭, 이전위치
+      let mx;let my;//현재위치
+      where= document.getElementById("where");//위치표시박스
+      const _Where= (e) =>{//위치표시박스에 위치넣어줌
+        where.style.left= (e.pageX+30)+"px";
+        where.style.top= (e.pageY-30)+"px";
+        where.innerText= `(${dx-canvas.width/2}, ${canvas.height/2-dy})`;
+      }
+      const getW= (e,w) =>{//get x,y
+        return w? (e.pageX - parseInt(canvas.style.left, 10)): (e.pageY - parseInt(canvas.style.top, 10));
+      }
+      canvas.addEventListener("mousedown",(e) =>{
+        dx= getW(e, true);//getx
+        dy= getW(e, false);//gety
+        press= true;//누르는중
+        _Where(e);//위치표시
+      });
+      window.addEventListener("mousemove",(e) =>{
+        if(press){
+          mx= getW(e, true);
+          my= getW(e, false);
+          ctx.moveTo(dx, dy);
+          ctx.lineTo(mx, my);
+          ctx.stroke();
+          dx= mx;
+          dy= my;
+          e.target.id=='canvas'
+            ?_Where(e)
+            :where.innerText= "";
+        }
+      });
+      window.addEventListener("mouseup",(e) =>{
+        press= false;
+        where.innerText= "";
+      });
+    }
+  </script>
+  <title>Where</title>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="800">turn on js</canvas>
+  <form id="get_f" action="" method="">
+    <input id="Function" type="text" placeholder="y=x^2"/>
+    <button type="submit">입력</button>
+  </form>
+  <span id="where"></span>
+</body>
+</html>
