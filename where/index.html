@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <style media="screen">
+    * {
+      user-select: none;
+    }
+
+    #canvas {
+      border: 1px solid #000;
+      position: absolute;
+      box-sizing: border-box;
+    }
+
+    #where {
+      position: absolute;
+      z-index: 99999;
+      color: #000;
+      font-size: 20px;
+      -ms-user-select: none;
+      -moz-user-select: -moz-none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      user-select: none;
+    }
+  </style>
+  <script>
+    let canvas;
+    let ctx;
+
+    let where;
+
+    let a;
+    let b;
+    let Wy;
+    let Wx= [];
+    let bracket= "";
+    let Fun=null;
+    window.onload = () => {
+      canvas = document.getElementById('canvas'); //canvas
+      canvas.style.left = (window.innerWidth - canvas.width) / 2 + 'px';
+      canvas.style.top = (window.innerHeight - canvas.height) / 2 + 'px';
+      ctx = canvas.getContext('2d'); //canvas.getContext
+      const _Grid = () => {
+        ctx.lineCap = "round";
+        ctx.strokeStyle="#333";
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.width / 2);
+        ctx.lineTo(canvas.height, canvas.width / 2);
+        ctx.stroke();
+        ctx.moveTo(canvas.height / 2, 0);
+        ctx.lineTo(canvas.height / 2, canvas.width);
+        ctx.stroke();
+        ctx.closePath();
+        ctx.beginPath();
+      }
+      _Grid();//격자
+      ctx.strokeStyle = "#000";
+
+      document.getElementById("get_f").addEventListener("submit", (e) => {
+        e.preventDefault();
+        Fun = document.getElementById("Function").value;//Fun에 input 값 넣어줌
+        if(Fun=="")
+          return false;
+        document.getElementById("Function").value = "";//input reset
+        a = Fun.split("=")[0].split("");//등호 왼쪽
+        b = Fun.split("=")[1].split("");//등호 오른쪽
+        Wx=[];//x location
+        Wy=0;//y locaion
+        let evr="";//eval
+        let m=undefined;//minus
+
+        for (var i = 0; i < a.length; i++) {
+          switch (a[i]) {
+            case 'y':
+              Wy = i;
+              break;
+            default:
+          }
+        }
+        for (var i = 0; i < b.length; i++) {
+          if (isNaN(Number(b[i]))) {
+            switch (b[i]) {
+              case 'x':
+                Wx[i] = i;
+                break;
+              default:
+            }
+          }
+        }
+        // console.log(bracket);
+        ctx.beginPath();//start;
+        let cx="";
+        b.map(e=>{cx+=e});
+        console.log(`full fun= ${a}=${cx}`);
+        for (var i = -4; i <= 4; i=i+0.1) {//-4~4 line draw
+          _Line(Wx,b,i, true);
+          _Line(Wx,b,i+0.1, false);
+        }
+        ctx.closePath();
+      });
+
+      const _InsetX= (WX,B,i) =>{
+        WX.map((v,e) =>{//Wx에 넣어둔 x위치에 i값을 넣어줌
+          if( !isNaN( Number( B[WX[e] - 1] ) ) )
+          B[WX[e]]="*"+i;//넣어줌
+          else
+          B[WX[e]]='('+i+')';//넣어줌
+        });
+      };
+      const _Line= (WX, B, i, tf) =>{
+        let onbracket= false;
+        bracket="";
+        _InsetX(WX,B,i);
+        B.map((v, n) =>{
+          switch (B[n]) {
+            case '(':
+              while(B[n]!=')'){
+                if(B[n]=='^')
+                  bracket+='**';
+                else
+                  bracket+=B[n];
+                n++;
+              }
+              bracket+=B[n];
+              n++;
+              console.log(bracket);
+              break;
+            default:
+          }
+        });
+        evr="";
+        m=undefined;
+        for(var j=0;j<B.length;j++){//evr에 넣어줌
+          if(onbracket){
+            if(B[j]==')')
+              onbracket= false;
+          }else{
+            if(m!=undefined){//j-1 == "-"
+                if(B[j]!='('){
+                  if(B[j-1]!=undefined)
+                    evr+= "*(-1)*"+B[j];
+                  else
+                    evr+= "(-1)*"+B[j];
+                }else if(B[j+1]=='^'){
+                  evr+='('+B[j];
+                  j++;
+                  for(var p=1;p<B[j+1];p++){
+                    evr+= "*"+B[j-1];
+                  }
+                  evr+=')';
+                  j++;
+                }
+                else if(B[j]=='('){
+                    onbracket= true;
+                    evr+= "(-1)*"+bracket;
+                }else{
+                  if(B[j-1]!=undefined)
+                    evr+= "*(-1)*"+B[j];
+                  else
+                    evr+= "(-1)*"+B[j];
+                }
+                m= undefined;
+            }else{
+              if(B[j]=='-'){// j == "-"
+                if(m==undefined){// m값이 없으면 m == j
+                  m= j;
+                }
+              }else if(B[j+1]=='^'){
+                evr+='('+B[j];
+                j++;
+                for(var p=1;p<B[j+1];p++){
+                  evr+= "*"+B[j-1];
+                }
+                evr+=')';
+                j++;
+              }else{// j != "-"
+                if(B[j]=='('){
+                  onbracket= true;
+                  evr+= bracket;
+                }else{
+                  evr+= B[j];
+                }
+              }
+            }
+          }
+        }
+        let xl= ((i * 100) + 400).toFixed(1);//x location
+        if(xl==400)
+          console.log(evr);
+        let yl= ((-(eval(evr)*100)) + 400).toFixed(1);//y location
+        tf? (console.log(`    ${xl-400},${-(yl)+400}`),ctx.moveTo(xl, yl)): (ctx.lineTo(xl, yl),ctx.stroke());
+      }
+      let press = false; //누르고있는지
+      let dx;
+      let dy; //첫클릭, 이전위치
+      let mx;
+      let my; //현재위치
+      where = document.getElementById("where"); //위치표시박스
+      const _Where = (e) => { //위치표시박스에 위치넣어줌
+        where.style.left = (e.pageX + 30) + "px";
+        where.style.top = (e.pageY - 30) + "px";
+        where.innerText = `(${dx-canvas.width/2}, ${canvas.height/2-dy})`;
+      }
+      const getW = (e, w) => { //get x,y
+        return w ? (e.pageX - parseInt(canvas.style.left, 10)) : (e.pageY - parseInt(canvas.style.top, 10));
+      }
+      canvas.addEventListener("mousedown", (e) => {
+        dx = getW(e, true); //getx
+        dy = getW(e, false); //gety
+        press = true; //누르는중
+        ctx.moveTo(dx, dy);
+        ctx.lineTo(dx, dy);
+        ctx.stroke();
+        _Where(e); //위치표시
+      });
+      window.addEventListener("mousemove", (e) => {
+        if (press) {
+          mx = getW(e, true);
+          my = getW(e, false);
+          ctx.moveTo(dx, dy);
+          ctx.lineTo(mx, my);
+          ctx.stroke();
+          dx = mx;
+          dy = my;
+          e.target.id == 'canvas' ?
+            _Where(e) :
+            where.innerText = "";
+        }
+      });
+      window.addEventListener("mouseup", (e) => {
+        press = false;
+        where.innerText = "";
+      });
+    }
+  </script>
+  <title>Where</title>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="800">turn on js</canvas>
+  <form id="get_f" action="" method="">
+    <input id="Function" type="text" placeholder="y=x^2" autofocus/>
+    <button type="submit">입력</button>
+  </form>
+  <span id="where"></span>
+</body>
+
+</html>
