@@ -5,77 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <style data="test">
-    * {
-      user-select: none;
-      box-sizing: border-box;
-    }
-    #canvas {
-      border: 1px solid #000;
-      position: absolute;
-      box-sizing: border-box;
-    }
-    #where {
-      position: absolute;
-      z-index: 99999;
-      color: #000;
-      font-size: 20px;
-      -ms-user-select: none;
-      -moz-user-select: -moz-none;
-      -webkit-user-select: none;
-      -khtml-user-select: none;
-      user-select: none;
-    }
-    #Color_box{
-      width: 30px;height: 30px;
-      border: 1px solid #000;
-      margin-top: 7px;
-      display: inline-block;
-      background: black;
-    }
-    #Color_set{
-      position: absolute;
-      width: 285px;height: 330px;
-      border: 1px solid #000;
-      padding: 14px;
-    }
-    #Color_set>canvas{
-      width: 255px;
-      float: left;
-      border: 1px solid #000;
-    }
-    #Color_set> #Choice_color{
-      height: 25px;
-    }
-    #Color_set> #Choice_bw{
-      height: 255px;
-      margin-top: 15px;
-    }
-
-    #range{
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      width: 255px;
-      height: 25px;
-    }
-    input[type=range]::-webkit-slider-runnable-track {
-      width: 255px;
-      height: 25px;
-      background: linear-gradient(to right, rgb(255, 0, 0) , rgb(255, 255, 0), rgb(0, 255, 0), rgb(0, 255, 255), rgb(0, 0, 255), rgb(255, 0, 255), rgb(255, 0, 0));
-      border: none;
-      border-radius: 3px;
-    }
-    input[type=range]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        border: none;
-        height: 32px;
-        width: 32px;
-        border-radius: 50%;
-        border: 1px solid #fff;
-        background: goldenrod;
-        margin-top: -4px;
-    }
-  </style>
+  <link rel="stylesheet" href="./style.css">
+  <style data="test"></style>
   <script>
     let canvas;
     let ctx;
@@ -117,16 +48,18 @@
         color_ctx.fillRect(0, 0, 255, 25);
       };
       _Color();
+      const _SetRangeColor= (GR) =>{
+        style.innerHTML += `input[type=range]::-webkit-slider-thumb { background: rgb(${GR[0]}, ${GR[1]}, ${GR[2]}); }`;
+      }
       const _SetColor= (e) =>{
         if(e.target.id == "Choice_color") {
           let rect = color_canvas.getBoundingClientRect();
           let x= ( e.clientX - rect.left );
           let y= ( e.clientY - rect.top );
           let get_rgb= color_ctx.getImageData(x, y, 1, 1).data;
-          _SetRangeColor();
+          _SetRangeColor(get_rgb);
           Box.style.background= `rgb(${get_rgb[0]},${get_rgb[1]},${get_rgb[2]}`;
           ctx.strokeStyle= `rgb(${get_rgb[0]},${get_rgb[1]},${get_rgb[2]})`;
-
           console.log(`rgb(${get_rgb[0]},${get_rgb[1]},${get_rgb[2]})`);
         }
       };
