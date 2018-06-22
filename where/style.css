@@ -1,6 +1,7 @@
 * {
   user-select: none;
   box-sizing: border-box;
+  margin:0;padding:0;
 }
 #canvas {
   border: 1px solid #000;
@@ -28,8 +29,9 @@
 #Color_set{
   position: absolute;
   width: 285px;height: 330px;
-  border: 1px solid #000;
   padding: 14px;
+  background:white;
+  border:1px solid #000;
 }
 #Color_set>canvas{
   width: 255px;
@@ -37,33 +39,18 @@
   border: 1px solid #000;
 }
 #Color_set> #Choice_color{
-  height: 25px;
+  height: 15px;
 }
 #Color_set> #Choice_bw{
   height: 255px;
   margin-top: 15px;
 }
-
-#range{
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  width: 255px;
-  height: 25px;
-}
-input[type=range]::-webkit-slider-runnable-track {
-  width: 255px;
-  height: 25px;
-  background: linear-gradient(to right, rgb(255, 0, 0) , rgb(255, 255, 0), rgb(0, 255, 0), rgb(0, 255, 255), rgb(0, 0, 255), rgb(255, 0, 255), rgb(255, 0, 0));
-  border: none;
-  border-radius: 3px;
-}
-input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    border: none;
-    height: 35px;
-    width: 35px;
-    border-radius: 50%;
-    border: 3px solid #fff;
-    background: red;
-    margin-top: -4px;
+#thumb{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: 11.4px;
+  border: 2.4px solid #fff;
+  cursor: pointer;
 }
