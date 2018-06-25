@@ -36,7 +36,6 @@
 #Color_set>canvas{
   width: 255px;
   float: left;
-  border: 1px solid #000;
 }
 #Color_set> #Choice_color{
   height: 15px;
@@ -53,4 +52,15 @@
   top: 11.4px;
   border: 2.4px solid #fff;
   cursor: pointer;
+}
+/* left= 261 */
+/* top= 37 ~ 291 */
+#bw{
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background: rgba(255,255,255, 0.3);
+    border: 1px solid rgba(255,255,255);
+    border-radius: 50%;
+    cursor: pointer;
 }
