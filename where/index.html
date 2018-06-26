@@ -13,9 +13,9 @@
         let Wx = []; //x location
         let bracket = ""; //on bracket text
         let Fun = null; // full function
-
         let canvas; //drawing canvas
         let ctx; //drawing canvas.ctx
+        let ct;
         window.onload = () => {
             canvas = document.getElementById('canvas'); //canvas
             ctx = canvas.getContext('2d'); //canvas.getContext
@@ -25,13 +25,13 @@
             let color_canvas = document.getElementById("Choice_color"); //bar
             let color_ctx = color_canvas.getContext("2d"); //barctx
             let cc = document.getElementById('Choice_bw'); //b,w
-            let ct = cc.getContext('2d'); //b,w ctx
+            ct = cc.getContext('2d'); //b,w ctx
             let thumb = document.getElementById('thumb'); //thumb
             let tcx; //click x
             let tmx; //move x
             let tp = false; //press
             let tl; //left
-            let Box= document.getElementById("Color_box");
+               let Box= document.getElementById("Color_box");
             let lx="254.0";
             let ly="0.0";
             let bw= document.getElementById("bw");
@@ -70,7 +70,6 @@
                 }
             };
             const _FColor= (x,y) =>{//아래꺼 thumb움직일때마다
-                console.log(`${x},${y}`);
                 let rgb = ct.getImageData(x, y, 1, 1).data;
                 let g1= rgb[0];
                 let g2= rgb[1];
@@ -81,16 +80,15 @@
             const _ApplyColor = (g) => {//위에꺼 thumb움직일때마다
                 /* box fill */
                 thumb.style.background = `rgb(${g[0]},${g[1]},${g[2]})`; //thumb
-                for (var i = 0; i <= 255; i++) {
+                for (var i = 0; i <= 256; i++) {
                     var grd = color_ctx.createLinearGradient(0, 0, 0, 255);
                     let g1=255-((255-g[0])/255*i);
                     let g2=255-((255-g[1])/255*i);
                     let g3=255-((255-g[2])/255*i);
-                    grd.addColorStop(0.0,`rgb(${g1},${g2},${g3})`);
                     grd.addColorStop(0.1,`rgb(${g1},${g2},${g3})`);
                     grd.addColorStop(0.9, "rgb(0,0,0)");
                     ct.fillStyle=grd;
-                    ct.fillRect(i, 0, i + 1, 255);
+                    ct.fillRect(i, 0, 1, 255);
                 }
                 _FColor(lx,ly);
                 /* //box fill */
@@ -162,8 +160,8 @@
                     let x = bmx - bcx + bl;
                     let y = bmy - bcy + bt;
                     _Move(x, bw, 9, 261, y);
-                    let gx = ((parseInt(bw.style.left, 10) - 9) * (254 / 252)).toFixed(1); //get x 9~216 252*x=255
-                    let gy = ((parseInt(bw.style.top, 10) - 37) * (254 / 255)).toFixed(1); //get x 37~291
+                    let gx = ((parseInt(bw.style.left, 10) - 9) * (255 / 252)).toFixed(1); //get x 9~216 252*x=255
+                    let gy = ((parseInt(bw.style.top, 10) - 37) * (255 / 255)).toFixed(1); //get x 37~291
                     _FColor(gx, gy);
                 }
             });
@@ -425,10 +423,10 @@
     </form>
     <span id="where"></span>
     <div id="Color_set">
-        <canvas id="Choice_color" width="255" height="15">
+        <canvas id="Choice_color" width="256" height="15">
         </canvas>
         <span id="thumb" style="left: 6px;background: red;"></span>
-        <canvas id="Choice_bw" width="255" height="255">
+        <canvas id="Choice_bw" width="256" height="255">
         </canvas>
         <span id="bw" style="left: 261px;top: 37px;background: rgba(255,255,255, 0.3);"></span>
     </div>

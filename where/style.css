@@ -34,7 +34,7 @@
   border:1px solid #000;
 }
 #Color_set>canvas{
-  width: 255px;
+  /* width: 255px; */
   float: left;
 }
 #Color_set> #Choice_color{
