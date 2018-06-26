@@ -115,7 +115,6 @@
                 Box.style.background= `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
             };
             _ApplyColor(color_ctx.getImageData(0, 1, 1, 1).data);
-
             color_canvas.addEventListener("mousedown", (e) => {//bar click
                 _ClickBar(e,color_canvas);
                 tcx = e.clientX;
@@ -127,7 +126,6 @@
                 tl = parseInt(thumb.style.left, 10);
                 tp = true;
             }); //thumb click
-
             cc.addEventListener("mousedown", (e) =>{
                 _ClickBar(e,cc);
                 bcx = (e.clientX);
@@ -236,6 +234,7 @@
                 ctx.beginPath();
             }
             _Grid(); //격자
+            
             const _Checking = (v) => {
                 switch (v) {
                     case "1":
@@ -261,8 +260,7 @@
                         return true;
                         break;
                     default:
-                        console.log(v);
-                        return false
+                        return false;
                 }
             }
             let form = document.getElementById("get_f"); //form
@@ -270,15 +268,12 @@
                 e.preventDefault();
                 Fun = document.getElementById("Function").value; //Fun에 input 값 넣어줌
                 document.getElementById("Function").value = ""; //input reset
-                Fun.split("").map(v => {
-                    if (!_Checking(v)) {
-                        Fun = ""
-                    }
-                });
-                if (Fun == "") {
-                    alert("안돼요");
+                if(Fun.length<1)
                     return false;
-                } //empty input
+                for(var i=0;i<Fun.split("").length;i++){
+                    if(!_Checking(Fun[i]))
+                        return false;
+                }
                 a = Fun.split("=")[0].split(""); //left
                 b = Fun.split("=")[1].split(""); //right
                 const _GetXY = (t, w) => { //return x,y location
