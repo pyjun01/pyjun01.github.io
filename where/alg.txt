@@ -51,3 +51,24 @@ y= x(x-3)(x^2-1)
 y= x(x - 2)(x + 3)
 
 //function
+
+// i=0 ~255
+                    //i=0
+                    // 255, 255, 255
+                    //defualt=255
+                    //i=255
+                    // 255, 140, 0
+                    // 255-i=255, 255, 255
+                    // 255-i=0, 0, 0
+                    // grd.addColorStop(0.0,`rgb(${(255-i)},${(255-i)},${(255-i)})`);
+                    // result= white ~ black;
+
+                    // 255-i+g=2 55+g,255+g,255+g
+                    // 255-i+g=g , g, g
+                    //grd.addColorStop(0.0, `rgb(${255-i+g[0]},${255-i+g[1]},${255-i+g[2]})`);
+                    // result=white ~ checkcolor
+                    // err=colorchange
+
+                    // 255-i+( -g+255)
+                    // 255-g=0 ~255사이의 변화값
+                    // 255-(255-g/255*i)

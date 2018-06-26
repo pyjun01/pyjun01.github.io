@@ -31,6 +31,12 @@
             let tmx; //move x
             let tp = false; //press
             let tl; //left
+            let Box= document.getElementById("Color_box");
+            let lx="254.0";
+            let ly="0.0";
+            let bw= document.getElementById("bw");
+            let bcx;let bmx;let bl;let bp=false;
+            let bcy;let bmy;let bt;
             const _Color = () => {
                 var grd = color_ctx.createLinearGradient(0, 0, 255, 0);
                 grd.addColorStop(0.1, "hsl(0,100%,50%)");
@@ -44,10 +50,17 @@
                 color_ctx.fillRect(0, 0, 255, 15);
             }; //background gradient//background gradient
             _Color(); //background gradient
-            const _ClickBar = (e) => { //color_canvas 클릭시
-                let rect = color_canvas.getBoundingClientRect();
-                let x = (e.clientX - rect.left + 6);
-                _Move(x);
+
+            const _ClickBar = (e,target) => { //color_canvas 클릭시
+                let rect = target.getBoundingClientRect();
+                if(target.id=="Choice_color"){
+                    let x = (e.clientX - rect.left + 6);
+                    _Move(x, thumb, 6, 254);
+                }else{
+                    let x = (e.clientX - rect.left + 9);
+                    let y = (e.clientY - rect.top +37);
+                    _Move(x, bw, 9, 261, y);
+                }
                 if (e.target.id == "Choice_color") {
                     let rect = color_canvas.getBoundingClientRect();
                     let x = (e.clientX - rect.left);
@@ -56,45 +69,33 @@
                     _ApplyColor(get_rgb);
                 }
             };
-            const _ApplyColor = (g) => {
+            const _FColor= (x,y) =>{//아래꺼 thumb움직일때마다
+                console.log(`${x},${y}`);
+                let rgb = ct.getImageData(x, y, 1, 1).data;
+                let g1= rgb[0];
+                let g2= rgb[1];
+                let g3= rgb[2];
+                Box.style.background= `rgb(${g1},${g2},${g3})`; //stroke
+                ctx.strokeStyle = `rgb(${g1},${g2},${g3})`; //stroke
+            }
+            const _ApplyColor = (g) => {//위에꺼 thumb움직일때마다
                 /* box fill */
+                thumb.style.background = `rgb(${g[0]},${g[1]},${g[2]})`; //thumb
                 for (var i = 0; i <= 255; i++) {
                     var grd = color_ctx.createLinearGradient(0, 0, 0, 255);
-                    // i=0 ~255
-                    //i=0
-                    // 255, 255, 255
-                    //defualt=255
-                    //i=255
-                    // 255, 140, 0
-                    // 255-i=255, 255, 255
-                    // 255-i=0, 0, 0
-                    // grd.addColorStop(0.0,`rgb(${(255-i)},${(255-i)},${(255-i)})`);
-                    // result= white ~ black;
-
-                    // 255-i+g=2 55+g,255+g,255+g
-                    // 255-i+g=g , g, g
-                    //grd.addColorStop(0.0, `rgb(${255-i+g[0]},${255-i+g[1]},${255-i+g[2]})`);
-                    // result=white ~ checkcolor
-                    // err=colorchange
-
-                    // 255-i+( -g+255)
-                    // 255-g=0 ~255사이의 변화값
-                    // 255-(255-g/255*i)
                     let g1=255-((255-g[0])/255*i);
                     let g2=255-((255-g[1])/255*i);
                     let g3=255-((255-g[2])/255*i);
                     grd.addColorStop(0.0,`rgb(${g1},${g2},${g3})`);
-                    grd.addColorStop(1, "rgb(0,0,0)");
+                    grd.addColorStop(0.1,`rgb(${g1},${g2},${g3})`);
+                    grd.addColorStop(0.9, "rgb(0,0,0)");
                     ct.fillStyle=grd;
                     ct.fillRect(i, 0, i + 1, 255);
                 }
+                _FColor(lx,ly);
                 /* //box fill */
-                thumb.style.background = `rgb(${g[0]},${g[1]},${g[2]})`; //thumb
-                ctx.strokeStyle = `rgb(${g[0]},${g[1]},${g[2]})`; //stroke
             } //apply color
-            _ApplyColor(color_ctx.getImageData(0, 1, 1, 1).data);
             const _Move = (x,t, min, max, y=false) => {//move thumb
-                console.log(y);
                 if(y!=false){
                     if(291 < y) {
                         t.style.top = "291px";
@@ -112,8 +113,13 @@
                     t.style.left = x + "px";
                 }
             }
+            const _ApplyBw= (rgb) =>{
+                Box.style.background= `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            };
+            _ApplyColor(color_ctx.getImageData(0, 1, 1, 1).data);
+
             color_canvas.addEventListener("mousedown", (e) => {//bar click
-                _ClickBar(e);
+                _ClickBar(e,color_canvas);
                 tcx = e.clientX;
                 tl = parseInt(thumb.style.left, 10);
                 tp = true;
@@ -123,29 +129,24 @@
                 tl = parseInt(thumb.style.left, 10);
                 tp = true;
             }); //thumb click
-            const _ApplyBw= (rgb) =>{
-                let Box= document.getElementById("Color_box");
-                Box.style.background= `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
-            };
+
             cc.addEventListener("mousedown", (e) =>{
-                //ct
-                let rect= cc.getBoundingClientRect();
-                let x= e.pageX - rect.left;
-                let y= e.pageY - rect.top;
-                _ApplyBw(ct.getImageData(x, y, 1, 1).data);
-            });
-            let bw= document.getElementById("bw");
-            let bcx;let bmx;let bl;let bp=false;
-            let bcy;let bmy;let bt;
+                _ClickBar(e,cc);
+                bcx = (e.clientX);
+                bl = parseInt(bw.style.left, 10);
+                bcy = (e.clientY);
+                bt = parseInt(bw.style.top, 10);
+                bp = true;
+            });//명도 채도조절박스
             bw.addEventListener("mousedown", (e) =>{
                 bcx = (e.clientX);
                 bl = parseInt(bw.style.left, 10);
                 bcy = (e.clientY);
                 bt = parseInt(bw.style.top, 10);
                 bp = true;
-            });
+            });//명도 채도조절thumb
             window.addEventListener("mousemove", (e) => { //click->move
-                if (tp) {
+                if (tp) {//위에꺼
                     let rect = thumb.getBoundingClientRect();
                     tmx = (e.clientX);
                     let x = tmx - tcx + tl;
@@ -154,24 +155,26 @@
                     let get_rgb = color_ctx.getImageData(gx, 1, 1, 1).data; //get x.colordata
                     _ApplyColor(get_rgb);
                 }
-                if (bp) {
+                if (bp) {//아래꺼
                     let rect = bw.getBoundingClientRect();
                     bmx = (e.clientX);
                     bmy = (e.clientY);
                     let x = bmx - bcx + bl;
                     let y = bmy - bcy + bt;
                     _Move(x, bw, 9, 261, y);
-                    let gx = ((parseInt(bw.style.left, 10) - 9) * (255 / 246)).toFixed(1); //get x
-                    let gy = ((parseInt(bw.style.top, 10) - 37) * (255 / 218)).toFixed(1); //get x
-                    let get_rgb = ct.getImageData(gx, gy, 1, 1).data;
-                    console.log(get_rgb);
+                    let gx = ((parseInt(bw.style.left, 10) - 9) * (254 / 252)).toFixed(1); //get x 9~216 252*x=255
+                    let gy = ((parseInt(bw.style.top, 10) - 37) * (254 / 255)).toFixed(1); //get x 37~291
+                    _FColor(gx, gy);
                 }
             });
             window.addEventListener("mouseup", (e) => {
-                if (tp)
+                if (tp)//위에꺼
                     tp = !tp;
-                if (bp)
+                if (bp){//아래꺼
                     bp = !bp;
+                    lx = ((parseInt(bw.style.left, 10) - 9) * (254 / 252)).toFixed(1); //get x 9~216 252*x=255
+                    ly = ((parseInt(bw.style.top, 10) - 37) * (254 / 255)).toFixed(1); //get x 37~291
+                }
             }); //click->move->up
             /* //setColor */
             /* drawing */
@@ -427,7 +430,7 @@
         <span id="thumb" style="left: 6px;background: red;"></span>
         <canvas id="Choice_bw" width="255" height="255">
         </canvas>
-        <span id="bw" style="left: 9px;top: 37px;background: rgba(255,255,255, 0.3);"></span>
+        <span id="bw" style="left: 261px;top: 37px;background: rgba(255,255,255, 0.3);"></span>
     </div>
 </body>
 
