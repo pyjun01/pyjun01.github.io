@@ -1,37 +1,36 @@
 * {
-  user-select: none;
-  box-sizing: border-box;
-  margin:0;padding:0;
+    margin:0;padding:0;
+    user-select: none;box-sizing: border-box;
 }
 #canvas {
-  border: 1px solid #000;
-  position: absolute;
-  box-sizing: border-box;
+    position: absolute;
+    border: 1px solid #000;
+    box-sizing: border-box;
 }
 #where {
   position: absolute;
   z-index: 99999;
   color: #000;
   font-size: 20px;
-  -ms-user-select: none;
+  /* -ms-user-select: none;
   -moz-user-select: -moz-none;
   -webkit-user-select: none;
   -khtml-user-select: none;
-  user-select: none;
+  user-select: none; */
 }
 #Color_box{
-  width: 30px;height: 30px;
-  border: 1px solid #000;
-  margin-top: 7px;
-  display: inline-block;
-  background: black;
+    display: inline-block;
+    width: 30px;height: 30px;
+    margin-top: 7px;
+    border: 1px solid #000;
+    background: black;
 }
 #Color_set{
   position: absolute;
   width: 285px;height: 330px;
   padding: 14px;
-  background:white;
   border:1px solid #000;
+  background:rgb(240, 240, 240);
 }
 #Color_set>canvas{
   /* width: 255px; */
@@ -59,8 +58,8 @@
     width: 15px;
     height: 15px;
     position: absolute;
-    background: rgba(255,255,255, 0.3);
-    border: 1px solid rgba(255,255,255);
+    background: rgba(255,255,255, 0.5);
+    border: 1px solid rgb(190, 190, 190);
     border-radius: 50%;
     cursor: pointer;
 }
