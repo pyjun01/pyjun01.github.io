@@ -1,0 +1,374 @@
+@import "//cdn.rawgit.com/Cead115/malGD.github.io/master/fonts/Binggrae.css";
+/* #right-search-form {
+    padding: 20px 0 0
+} */
+
+body,
+html {
+    font-family: 'Binggrae', sans-serif;
+    font-size: 14px
+}
+
+header .row>div:nth-child(1)>a {
+    display: block;
+    width: 145px;
+    height: 50px;
+    background-image: url(https://cead115.github.io/malGD.github.io/PC_logo.png);background-repeat: no-repeat;
+}
+header .row>div:nth-child(1)>a img {opacity: 0;}
+
+
+#article-list>.article-list-row:first-of-type {
+    border-top: 2px solid #66a7ff;
+}
+
+header #header-bar #header-top-notice strong.notice-badge {
+    background: #66a7ff;
+    padding: 4px 8px;
+    color: #fff;
+    font-weight: bold
+}
+
+#article-content-wrapper>.header {
+    border-top: 3px solid #66a7ff;
+    background: #cde2ff;
+}
+
+#board-info {
+    border-top: 3px solid #66a7ff;
+    border-left: 2px solid #66a7ff;
+    border-right: 2px solid #66a7ff;
+    border-bottom: 2px solid #66a7ff;
+    overflow: inherit;
+    padding: 5px 5px 0 8px;
+    margin: 0;
+}
+
+.btn-primary {
+    background: #66a7ff;
+    border-color: #ffffff;
+}
+
+#board-info #board-info-profile-img {
+    border-radius: 5em;
+    border: 1px solid #66a7ff;
+}
+
+#article-reply-area #reply-real-area .reply>.reply-header {
+    background: #cde2ff;
+}
+
+#main #main-content>div.frame,
+#main .menu-wrapper {
+    border-right: 0;
+    border-bottom: 0;
+}
+
+#article-list #article-list-category>a {
+    display: inline-block;
+    padding: 11px 16px;
+    background: #cde2ff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 700
+}
+
+#article-list>.article-list-row>.item>.list-title>small.comment-count {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 13px;
+    position: relative;
+    text-align: center;
+    padding: 0 5px;
+    color: #66a7ff;
+    word-break: break-word;
+    border-radius: 1px;
+    top: 2px;
+    float: left;
+}
+
+#artic le-list #article-list-category {
+    border-top: 3px solid #66a7ff;
+    background: #66a7ff;
+}
+
+body {
+    background: 0 0
+}
+
+header #header-bar {
+    margin-top: 0.2em;
+    margin-bottom: 1em;
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+header #right-search-form>#right-search-btn {
+    color: #66a7ff;
+    background: transparent;
+    border: none;
+    font-size: 1.4em;
+}
+
+header #right-search-form>input[type=text] {
+    position: relative;
+    border: 4px solid #66a7ff;
+    background: #fff;
+    font-size: 1.1em;
+    padding: 0.3em 0.5em;
+}
+
+header #header-bar>.row {
+    padding-top: 0.3em;
+    padding-bottom: 0.3em;
+    border-top: 4px solid #66a7ff;
+    background: #cde2ff;
+    border-bottom: 2px solid #67a7ff;
+    border-right: 2px solid #67a7ff;
+    border-left: 2px solid #67a7ff;
+}
+
+header #header-bar #header-top-notice strong.notice-badge {
+    background: #66a7ff;
+    padding: 4px 8px;
+    color: #fff;
+    font-weight: bold
+}
+
+#main .menu-wrapper>.header {
+    background: #66a7ff;
+    color: #fff;
+    padding: 0.45em 1.4em 0.45em 1em;
+    font-weight: bold
+}
+
+#main .menu-wrapper>a>em {
+    color: #66a7ff;
+}
+
+.pagination>li>a:hover {
+    animation: infinite AquaLinkBG 1.5s;
+}
+
+.pagination>.active>a,
+.pagination>.active>a:focus,
+.pagination>.active>a:hover,
+.pagination>.active>span,
+.pagination>.active>span:focus,
+.pagination>.active>span:hover {
+    background-color: #cde2ff;
+    border-color: #cde2ff;
+}
+
+element.style {
+    font-weight: bold;
+    color: #66a7ff;
+}
+
+#article-list>.article-list-row>.item>.list-header>span {
+    background-color: #66a7ff;
+    color: #fff;
+    padding: 1px 5px;
+    font-size: 11px;
+    border-radius: 100px;
+}
+
+html {
+    background: linear-gradient(#00344D, #00344D)
+}
+
+#article-reply-area>.header h5 {
+    font-size: 14px;
+    color: #66a7ff;
+    font-weight: 700
+}
+
+span.a-badge i.fa.fa-star {
+    opacity: 100;
+    color: rgba(0, 0, 0, 0);
+    vertical-align: 2px !important;
+    width: 15px;
+    height: 15px;
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+    background: url(https://cead115.github.io/malGD.github.io/소주-1515.gif);
+    animation: infinite rot360 1.2s;
+}
+
+#article-list>.article-list-row>.item>.list-title>.list-writer.logged>span {
+    color: #0044a0;
+}
+
+#board-info h1 {
+    border-bottom: 1px solid #66a7ff;
+    height: 30px;
+    padding-left: 60px;
+}
+
+#board-info #board-info-profile-img {
+    border-radius: 5em;
+    border: 1px solid #66a7ff;
+    float: left !important;
+}
+
+#board-info h1>a[href='/hn950421'] {
+    position: absolute;
+    left: 19px;
+    padding-left: 60px;
+    width: 150px;
+    height: 40px;
+    z-index: 1;
+}
+
+#board-info #viewers-area {
+    color: #0044a0;
+    font-size: 12px;
+    position: absolute;
+    right: 0px;
+    margin-right: 1em;
+    margin-top: 0.4em;
+}
+
+#board-info h1 .badge-success,
+#board-info h1 .badge-default {
+    position: absolute;
+    right: 0px;
+    margin-right: 1em;
+    margin-top: 2.8em;
+    background-color: #66a7ff;
+}
+
+#article-list>.article-list-row.notice {
+    background-color: #e2eeff;
+}
+
+#article-list>.article-list-row>.item>.list-header {
+    width: 40px;
+    border-right: 1px solid #66a7ff;
+}
+
+#article-list>.article-list-row>.item>.list-checkbox,
+#article-list>.article-list-row>.item>.list-header,
+#article-list>.article-list-row>.item>.list-category,
+#article-list>.article-list-row>.item>.list-title,
+#article-list>.article-list-row>.item>.list-blocked,
+#article-list>.article-list-row>.item>.list-time {
+    border-bottom: 1px solid #66a7ff;
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#main .menu-wrapper>a>i.fa.fa-square {
+    width: 24px;
+    display: inline-block;
+    text-align: center;
+    font-size: 0.1em;
+    color: #66a7ff;
+    vertical-align: 0.2em;
+}
+
+#article-list>.article-list-row {
+    text-align: center;
+    display: table;
+    width: 100%;
+}
+
+#article-reply-area #reply-real-area .reply>.reply-header>.reply-writer.logged,
+#article-reply-area #reply-best-area .reply>.reply-header>.reply-writer.logged {
+    font-weight: bold;
+    color: #0044a0;
+    cursor: pointer;
+}
+
+#board-info #viewers-area #viewers:before {
+    content: "찐따 ";
+    cursor: text;
+}
+
+#board-info #viewers-area #viewers:after {
+    content: "명 눈팅중";
+    cursor: text;
+}
+
+#article-list>.article-list-row>.item>.list-title>.list-writer {
+    float: right;
+    padding: 0 11px;
+    border-left: 1px solid #66a7ff;
+    border-right: 1px solid #66a7ff;
+    text-align: center;
+    min-height: 16px;
+    line-height: 16px;
+}
+
+#article-list #article-list-menu>.btn.best {
+    position: absolute;
+    left: 1em;
+    color: #0a7c0f;
+    background-image: none;
+    background-color: transparent;
+    border-color: #0a7c0f;
+}
+
+#article-list #article-list-menu>.btn.best.enable {
+    color: #fff;
+    background-color: #10b917;
+    border-color: #10b917;
+}
+
+.pagination>li>a,
+.pagination>li>span {
+    color: #0044a0;
+}
+
+header #header-bar>.row,
+#main .menu-wrapper,
+#main #main-content>div.frame {
+    box-shadow: 3px 3px 3px rgba(0, 0, 0, 0.5);
+}
+
+#article-list {
+    margin: 0;
+    padding: 0 0 2em;
+}
+
+span.a-badge {
+    margin-right: 0.3em;
+    display: inline-block;
+    width: 2em;
+    text-align: center;
+    overflow: hidden;
+    float: left;
+}
+
+#article-list #article-list-category {
+    border-top: 2px solid #66a7ff;
+    border-bottom: 2px solid #66a7ff;
+    background: #cde2ff;
+}
+
+.fa-thumbs-up:before {
+    content: "\f005";
+}
+
+.btn-outline-success {
+    color: #0a7c0f;
+    background-image: none;
+    background-color: transparent;
+    border-color: #0a7c0f;
+}
+
+.fa-thumbs-down:before {
+    content: "\f119";
+}
+
+.btn-outline-primary {
+    color: #FF0000;
+    background-image: none;
+    background-color: transparent;
+    border-color: #FF0000;
+}
+
+#board-info #viewers-area .fa-user:before {
+    color: rgba(10, 59, 84, 0);
+    content: url(https://cead115.github.io/malGD.github.io/구름_1818.png);
+}
