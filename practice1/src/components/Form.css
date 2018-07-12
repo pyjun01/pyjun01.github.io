@@ -1,0 +1,14 @@
+.form{display: flex;}
+.form input{
+    flex:1;
+    font-size: 1.25rem;
+    outline:none;border:none;border-bottom:1px solid #c5f6fa;
+}
+.create-button{
+    margin-left:1rem;padding:0.5rem 1rem;
+    background:#22b8cf;
+    border-radius: 3px;
+    color:#fff;font-weight: 600;
+    cursor: pointer;
+}
+.create-button:hover{background: #3bc9db;}
