@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>test</title>
+	<style>
+		html,body{width: 100vw;height: 100vh;display: flex;justify-content: center;align-items: center;background: #333;}
+		canvas{background: #fff;}
+	</style>
+</head>
+<body>
+	<canvas id="canvas" width="1200" height="675"></canvas>
+	<script>
+		(function() {
+			var timeouts = [];
+			var messageName = "zero-timeout-message";
+
+			function setZeroTimeout(fn) {
+				timeouts.push(fn);
+				window.postMessage(messageName, "*");
+			}
+
+			function handleMessage(event) {
+				if (event.source == window && event.data == messageName) {
+					event.stopPropagation();
+					if (timeouts.length > 0) {
+						var fn = timeouts.shift();
+						fn();
+					}
+				}
+			}
+
+			window.addEventListener("message", handleMessage, true);
+
+			window.setZeroTimeout = setZeroTimeout;
+		})();
+		var FPS= 60;
+		var images= {};
+		var loadImage= function (sources, callback){
+			var nb = 0;
+			var loaded = 0;
+			var imgs = {};
+			for(var i in sources){
+				nb++;
+				imgs[i] = new Image();
+				imgs[i].src = sources[i];
+				imgs[i].onload = function(){
+					loaded++;
+					if(loaded == nb){
+						callback(imgs);
+					}
+				}
+			}
+		}
+		// function drawF (){
+		// 	this.ctx.save();
+		// 	this.ctx.beginPath();
+		// 	this.ctx.moveTo(0, 0);//1
+		// 	this.ctx.lineTo(W, 0);//2
+		// 	this.ctx.lineTo(W, 150);//3
+		// 	this.ctx.lineTo(0, 300);//4	
+		// 	this.ctx.clip();// will close the path implicit
+		// 	this.ctx.clearRect(0,0, W, H);
+		// 	// this.ctx.fillStyle= lo[0].c;
+		// 	// this.ctx.fillRect(lo[0].x, lo[0].y, W+lo[0].x, H-lo[0].y);
+		// 	this.ctx.drawImage(image, lo[0].x, 0, W+lo[0].x, H);
+		// 	this.ctx.closePath();
+		// 	this.ctx.restore();
+		// }
+		// function drawS (){
+		// 	this.ctx.save();
+		// 	this.ctx.beginPath();
+		// 	this.ctx.moveTo(0, 300);//1
+		// 	this.ctx.lineTo(W, 150);//2
+		// 	this.ctx.lineTo(W, 500);//3
+		// 	this.ctx.lineTo(0, 650);//4
+		// 	this.ctx.clip();// will close the path implicit
+		// 	this.ctx.clearRect(0,0, W, H);
+		// 	this.ctx.fillStyle= lo[1].c;
+		// 	// this.ctx.fillRect(lo[1].x, lo[1].y, W+lo[1].x, H-lo[1].y);
+		// 	this.ctx.drawImage(image, lo[1].x, 0, W+lo[1].x, H,);
+		// 	this.ctx.closePath();
+		// 	this.ctx.restore();
+		// }
+		// function drawT (){
+		// 	this.ctx.save();
+		// 	this.ctx.beginPath();
+		// 	this.ctx.moveTo(0, 650);//1
+		// 	this.ctx.lineTo(W, 500);//2
+		// 	this.ctx.lineTo(W, H);//3
+		// 	this.ctx.lineTo(0, H);//4
+		// 	this.ctx.clip();// will close the path implicit
+		// 	this.ctx.clearRect(0,0, W, H);
+		// 	this.ctx.fillStyle= lo[2].c;
+		// 	this.ctx.fillRect(lo[2].x, lo[2].y, W+lo[2].x, H-lo[2].y);
+		// 	this.ctx.closePath();
+		// 	this.ctx.restore();
+		// }
+		// function draw(cnt, num){
+		// 	if(lo[num]){
+		// 		var pl;
+		// 		// if(cnt<.3){
+		// 		// 	pl= 1000*(10/3)*cnt*cnt
+		// 		// }else if(.3<cnt && cnt<.8){
+		// 		// 	pl= 1000*(10/8)*cnt*cnt
+		// 		// 	if(num==0)
+		// 		// 		console.log(pl);
+		// 		// }else{
+		// 		// 	pl= 1000*(-1+(4-2*cnt)*cnt)
+		// 		// }
+		// 		pl= cnt<.5 ? 1000*2*cnt*cnt : 1000*(-1+(4-2*cnt)*cnt);
+		// 		lo[num].x= Number(pl).toFixed(1);
+		// 		if(num==0)
+		// 		console.log(lo[num].x)
+		// 		if(num==0){
+		// 			drawF();
+		// 		}else if(num==1){
+		// 			drawS();
+		// 		}else{
+		// 			drawT();
+		// 		}
+		// 		setTimeout(function (){
+		// 			if(lo[num].x>=1000){
+		// 				return;
+		// 			}
+		// 			draw(cnt+0.007, num);
+		// 		}, 1000/60);//draw*60= 1s
+		// 	}
+		// }
+		// function move (){
+		// 	draw(0, 0);
+		// 	setTimeout(function (){
+		// 		draw(0, 1);
+		// 		setTimeout(function (){
+		// 			draw(0, 2);
+		// 		}, 500);
+		// 	}, 500);
+		// }
+		var canvas= document.getElementById("canvas");
+		var ctx= canvas.getContext("2d");
+		function Slide (){
+			this.canvas= document.getElementById("canvas");
+			this.ctx= canvas.getContext("2d");
+			this.W= canvas.width;
+			this.H= canvas.height;
+			this.S= 150;
+			this.L= 300;
+			this.location= [
+				{
+					x: 0,
+				},
+				{
+					x: 0,
+				},
+				{
+					x: 0,
+				},
+			];
+		}
+		Slide.prototype.draw= function (){
+			for(var i=0; i<3; i++){// cliping, drawing
+				this.ctx.save();
+				this.ctx.beginPath();
+				switch(i) {
+					case 0:
+						this.ctx.moveTo(0, 0);//1
+						this.ctx.lineTo(this.W, 0);//2
+						this.ctx.lineTo(this.W, this.S);//3
+						this.ctx.lineTo(0, this.L);//4	
+						break;
+					case 1:
+						this.ctx.moveTo(0, this.L);//1
+						this.ctx.lineTo(this.W, this.S);//2
+						this.ctx.lineTo(this.W, this.L+200);//3
+						this.ctx.lineTo(0, this.S+500);//4
+						break;
+					case 2:
+						this.ctx.moveTo(0, this.S+500);//1
+						this.ctx.lineTo(this.W, this.L+200);//2
+						this.ctx.lineTo(this.W, this.H);//3
+						this.ctx.lineTo(0, this.H);//4
+						// this.ctx.moveTo(0, this.S+490);//1
+						// this.ctx.lineTo(this.W, this.L+190);//2
+						// this.ctx.lineTo(this.W, this.H);//3
+						// this.ctx.lineTo(0, this.H);//4
+
+						break;
+				}
+				this.ctx.clip();// will close the path implicit
+				this.ctx.clearRect(0, 0, this.W, this.H);
+				this.ctx.drawImage(
+					images, 
+					0, 0, images.width, images.height,// images xy
+					this.location[i].x, 0, this.W*2, this.H// canvas xy
+				);
+				// this.ctx.closePath();	
+				this.ctx.restore();
+			}
+			var self = this;
+			if(self.location[2].x>-1200)
+			requestAnimationFrame(function(){
+				self.draw();
+			});
+		}
+		Slide.prototype.update= function (){
+			this.location[0].x-= this.location[0].x>-1200? 5: 0;
+			var self= this;
+			setTimeout(function (){
+				self.location[1].x-= self.location[1].x>-1200? 5: 0;
+				setTimeout(function (){
+					self.location[2].x-= self.location[2].x>-1200? 5: 0;
+				}, 300)
+			}, 300)
+			console.log(self.location[2].x);
+			if(self.location[2].x<=-1200){
+				// setZeroTimeout(function(){
+				// 	self.update();
+				// });
+			}else{
+				setTimeout(function (){
+					self.update();
+				}, 1000/FPS);
+			}
+		}
+		Slide.prototype.display= function (){
+
+			
+		}
+		window.onload= _ =>{
+			var src= ["https://code.d2.co.kr/jewdri/smashtest/images/sec01_bg.png", "https://code.d2.co.kr/jewdri/smashtest/images/sec02_bg.png"];
+			var start= function (){
+				var slide= new Slide();
+				slide.draw();//draw image
+				// slide.update();//update image
+			}
+			loadImage(src, function (imgs){
+				var FullImage= document.createElement("canvas");
+				var FullImage_ctx= FullImage.getContext('2d');
+				FullImage.width= 2400;
+				FullImage.height= 675;
+				FullImage_ctx.drawImage(imgs[1], 0, 0, 1200, 675);
+				FullImage_ctx.drawImage(imgs[0], 1200, 0, 1200, 675);
+				// FullImage_ctx.drawImage(imgs[0], 0, 0);
+				// FullImage_ctx.drawImage(imgs[1], 1200, 0);
+				images= FullImage;
+				start();
+			});
+		}
+	</script>
+</body>
+</html>
