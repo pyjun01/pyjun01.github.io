@@ -4,12 +4,21 @@ li{list-style: none;padding-bottom: 2px;letter-spacing: -1px;}
 .box{width: 570px;margin: 10px 30px;border: 3px solid #d6d6d6;}
 .box:first-child{margin-top: 30px;}
 
-.ib li{padding-left: 10px;}
-.icon{float: left;display:inline-block;width: 2px;height: 2px;margin: 6px 5px 0 -10px;background: #b0b0b0;}
+.icon_box li{padding-left: 10px;}
+.icon_box li::before{
+	content: "";
+    display: inline-block;
+    width: 2px;
+    height: 2px;
+    background: #b0b0b0;
+    margin: 8px 5px 0 -8px;
+    float: left;
+}
+/*.icon{float: left;display:inline-block;width: 2px;height: 2px;margin: 6px 5px 0 -10px;background: #b0b0b0;}*/
 
-.nib li{padding-left: 15px;}
+.number_icon_box li{padding-left: 15px;}
 .numicon{float: left;display:inline-block;width: 13px;height: 13px;margin:3px 5px 0 -17px;border-radius:3px;color: #fff;text-align: center;line-height: 13px;font-size: 10px;}
-.co{background: #ff9b3c;}
-.cg{background: #b2b2b2;}
+.color_orange{background: #ff9b3c;}
+.color_gray{background: #b2b2b2;}
 
-.texticon{float: left;display: inline-block;height: 18px;padding:0 5px;margin-right: 5px;border:1px solid #e48431;border-radius:3px;background:#f55924;color: #fff;text-align: center;line-height: 17px;font-size: 10px;}
+.texticon{float: left;display: inline-block;height: 18px;padding:0 5px;margin-right: 5px;border:1px solid #e48431;border-radius:3px;background:#f55924;color: #fff;text-align: center;line-height: 17px;font-size: 10px;font-style: normal;}
