@@ -3,6 +3,9 @@ li{list-style: none;}
 a{text-decoration: none;color: #000;}
 .click{cursor: pointer;}
 .rank{float: left;width: 20px;height: 20px;margin-right: 8px;background: #d1d1d1;font-size: 14px;font-weight:bold;color: #fff;text-align: center;line-height: 20px;}
+i{border:solid #ddd; border-width: 0 2px 2px 0; display:inline-block;padding: 3px;}
+.right{transform: rotate(-45deg);}
+i.color{border-color: #d76ea9;}
 
 #app{width: 726px;margin: 0 auto;}
 .box{width: 610px;margin: 10px auto;border:2px solid #e5e5e5;}
@@ -11,12 +14,12 @@ a{text-decoration: none;color: #000;}
 .head>h1{float: left;font-size: 16px;line-height: 45px;}
 .head>h1>em{font-style:normal;color: #ce2590;}
 .head>a{float: right;font-size: 14px;margin-top: 13px;}
-.head>a>img{float: left;margin-top: 6px;margin-right: 2px;}
+.head>a>i{float: left;margin-top: 4px;margin-right: 3px;}
 
 ol,ul{padding: 15px;}
 ul>li, ol>li{height: 30px;}
 ul>li>a, ol>li>a{float: left;font-size: 16px;font-weight: 400;color: #6f6f6f;}
-ul>li>a>img{float: left;margin-top: 9px;margin-right: 8px;}
+ul>li>a>i{float: left;margin-top: 6px;margin-right: 4px;}
 ul>li>span, ol>li>span{float: right;font-size: 12px;color: #aaaaaa;}
 ol>li:nth-child(1)>.rank, 
 ol>li:nth-child(2)>.rank, 
