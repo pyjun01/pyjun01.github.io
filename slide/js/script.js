@@ -411,7 +411,6 @@ Slider.prototype.NextImage= function (next_idx, count1= 0, count2= 0, count3= 0)
 	}
 }
 Slider.prototype.MoveImage = function(tg, count1= 0, count2= 0, count3= 0) {
-	console.log(`${this.idx} ~ ${tg}`);
 	if(this.idx==tg)
 		return this.isAnimated=false;
 	var back= this.idx>tg;// direction
@@ -499,7 +498,6 @@ Slider.prototype.MoveImage = function(tg, count1= 0, count2= 0, count3= 0) {
 	}
 };
 Slider.prototype.thumbnail= function (){//draw first image
-	console.log(this.ctx);
 	this.ctx.drawImage(
     	this.images[0], 
     	0, 0, this.images[0].width, this.images[0].height,//image의 위치
