@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<meta charset="UTF-8">
+	<title>tableform</title>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="js/script.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<form action="">
+			<filedset>
+				<legend>Legend</legend>
+				<table>
+					<colgroup>
+						<col width="297">
+						<col width="500">
+					</colgroup>
+					<tbody>
+						<tr>
+							<td>인풋: 설명 숨기고 줄 바꿈 없는</td>
+							<td>
+								<input type="text" name="input1" id="input01">
+								<label for="input01" class="hidden">숨겨둔 설명 입니다. 줄 바꿈 없습니다.</label>
+							</td>
+						</tr>
+						<tr>
+							<td>인풋: 설명 숨기고 줄 바꿈</td>
+							<td>
+								<input type="text" name="input2" id="input02" class="input-line-break">
+								<label for="input02" class="hidden">숨겨둔 설명 입니다. 줄 바꿈 있습니다.</label>
+							</td>
+						</tr>
+						<tr>
+							<td>인풋: 설명 보이고 줄 바꿈 없는</td>
+							<td>
+								<input type="text" name="input3" id="input03">
+								<label for="input03">숨겨두지 않은 설명 입니다. 줄 바꿈 없습니다.</label>
+							</td>
+						</tr>
+						<tr>
+							<td>인풋: 설명 보이고 줄 바꿈</td>
+							<td>
+								<input type="text" name="input4" id="input04" class="input-line-break">
+								<label for="input04">숨겨두지 않은 설명 입니다. 줄 바꿈 했습니다.</label>
+							</td>
+						</tr>
+						<tr>
+							<td>인풋: 줄 바꿈 없는 인풋</td>
+							<td>
+								<input type="text" name="input5"> - <input type="text" name="input5"></td>
+						</tr>
+						<tr>
+							<td>인풋: 줄 바꿈</td>
+							<td>
+								<input type="text" name="input6" class="input-line-break"><input type="text" name="input6"></td>
+						</tr>
+						<tr>
+							<td>인풋: 레이블 클리어</td>
+							<td>
+								<div class="label-clear-box">
+									<input type="text" name="input7" id="input07" class="label-clear">
+									<label for="input07">레이블 텍스트를 인풋과 오버레이</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>멀티라인 인풋</td>
+							<td><textarea name="textarea01"></textarea></td>
+						</tr>
+						<tr>
+							<td>멀티라인 인풋: 레이블 클리어</td>
+							<td>
+								<div class="label-clear-box">
+									<textarea name="textarea02" id="textarea03" class="label-clear"></textarea>
+									<label for="textarea03">레이블 텍스트를 멀티라인 인풋과 오버레이</label>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td>셀렉트: 단일 선택</td>
+							<td>
+								<select name="select1" id="select01">
+									<option value="옵션 하나">옵션 하나</option>
+									<option value="옵션 둘">옵션 둘</option>
+									<option value="옵션 셋">옵션 셋</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>셀렉트: 복수 선택</td>
+							<td>
+								<select name="select2" id="select02" multiple>
+									<option value="옵션 하나">옵션 하나</option>
+									<option value="옵션 둘">옵션 둘</option>
+									<option value="옵션 셋">옵션 셋</option>
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td>체크박스 인풋: 줄 바꿈 없는</td>
+							<td>
+								<input type="checkbox" id="checkbox2_1" name="checkbox2">
+								<label for="checkbox2_1">레이블</label>
+								<input type="checkbox" id="checkbox2_2" name="checkbox2">
+								<label for="checkbox2_2">레이블</label>
+							</td>
+						</tr>
+						<tr>
+							<td>체크박스 인풋: 줄 바꿈 있는</td>
+							<td>
+								<div class="checkbox-line-break">
+									<input type="checkbox" id="checkbox2_1" name="checkbox2">
+									<label for="checkbox2_1">레이블</label>
+								</div>
+								<input type="checkbox" id="checkbox2_2" name="checkbox2">
+								<label for="checkbox2_2">레이블</label>
+							</td>
+						</tr>
+						<tr>
+							<td>라디오 인풋: 줄 바꿈 없는</td>
+							<td>
+								<input type="radio" name="radio1" id="radio1_1">
+								<label for="radio1_1">레이블</label>
+								<input type="radio" name="radio1" id="radio1_2">
+								<label for="radio1_2">레이블</label>
+							</td>
+						</tr>
+						<tr>
+							<td>라디오 인풋: 줄 바꿈 있는</td>
+							<td>
+								<div class="radio-line-break">
+									<input type="radio" name="radio2" id="radio2_1">
+									<label for="radio2_1">레이블</label>
+								</div>
+								<input type="radio" name="radio2" id="radio2_2">
+								<label for="radio2_2">레이블</label>
+							</td>
+						</tr>
+						<tr>
+							<td>파일</td>
+							<td>
+								<input type="file" name="file"></td>
+						</tr>
+					</tbody>
+				</table>
+			</filedset>
+		</form>
+	</div>
+</body>
+</html>
