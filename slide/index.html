@@ -153,43 +153,10 @@
 			</li>
 		</ul>
 		<nav class="btns">
-			<!-- <button class="btn-prev"><span>prev</span></button>
-			<button class="btn-next"><span>next</span></button> -->
 		</nav>	
 		<nav class="link-list">
 		</nav>
 	</div>
-	<h2>슬라이드5 -자동에 다 없이</h2>
-	<div class="visual-slider slider5">
-		<canvas id="canvas5" width="1200" height="857"></canvas>
-		<ul class="slide-list">
-			<li data-image="./images/index_1_180918.jpg" class="active">
-				<strong>자동슬라이드1슬라이드1</strong>
-				<span>서브카피안녕안녕하세요.</span>
-			</li>
-			<li data-image="./images/index_2_180918.jpg">
-				<strong>자동슬라이드2슬라이드2</strong>
-				<span>서브카피안녕안녕하세요.</span>
-			</li>
-			<li data-image="./images/index_3_180918.jpg">
-				<strong>자동슬라이드3슬라이드3</strong>
-				<span>서브카피안녕안녕하세요.</span>
-			</li>
-			<li data-image="./images/index_4_180918.jpg">
-				<strong>자동슬라이드4슬라이드4</strong>
-				<span>서브카피안녕안녕하세요.</span>
-			</li>
-			<li data-image="./images/index_5_180918.jpg">
-				<strong>자동슬라이드5슬라이드5</strong>
-				<span>서브카피안녕안녕하세요.</span>
-			</li>
-		</ul>
-		<nav class="btns">
-			<!-- <button class="btn-prev"><span>prev</span></button>
-			<button class="btn-next"><span>next</span></button> -->
-		</nav>	
-		<nav class="link-list">
-		</nav>
 	</div>
 
     <script>
@@ -200,10 +167,7 @@
 				},
 				onSlideStart: function (){
 					console.log("onChangeStart");
-				},
-				// onSlideChanged: function (){
-				// 	console.log("onChangeEnd");
-				// },
+				},			
 			};
 	    	var slide= new Slider({
 				slideWrap:'.slider1',  //이거추가
@@ -264,23 +228,6 @@
 				Autotime: 3000,// auto slide delay
 				Slidetime: 	1000,// sliding time
 				pageBtn: ".link-list",// page wrap name
-				// PrevArrowBtn: ".btn-prev",// prev arrow btn
-				// NextArrowBtn: ".btn-next",// next arrow btn
-				setSlides:{
-					wrap: '.slide-list',//wrap
-					list: '.slide-list li',//wrap list
-					viewClass : 'active'//버튼에두. 있을경우 클래스이거
-				},
-				S: 200,// clip short
-				L: 400,// clip long
-			}, callback);
-			var slide4= new Slider({
-				slideWrap:'.slider5',  //이거추가
-				Canvas: "#canvas5",// canvas name
-				Auto: true,// auto sldie
-				Autotime: 3000,// auto slide delay
-				Slidetime: 	1000,// sliding time
-				// pageBtn: ".link-list",// page wrap name
 				// PrevArrowBtn: ".btn-prev",// prev arrow btn
 				// NextArrowBtn: ".btn-next",// next arrow btn
 				setSlides:{

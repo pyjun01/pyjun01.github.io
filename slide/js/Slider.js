@@ -163,6 +163,30 @@ function Slider (option, callback){
 			self.NextAction();
 		}, self.Autotime+ self.Slidetime);//autoslide
 	}
+	function drawSlideImage (count){
+		this.ctx.drawImage(
+	    	this.images[this.idx], 
+	    	0, 
+	    	0, 
+	    	this.images[this.idx].width, 
+	    	this.images[this.idx].height, 
+	    	-(this.timeline[count]*this.W), 
+	    	0, 
+	    	this.W, 
+	    	this.H
+	    );
+	    this.ctx.drawImage(
+	    	this.images[prev_idx], 
+	    	0, 
+	    	0, 
+	    	this.images[prev_idx].width, 
+	    	this.images[prev_idx].height, 
+	    	-(this.timeline[count]*this.W)-this.W, 
+	    	0, 
+	    	this.W, 
+	    	this.H
+	    );
+	}
 	this.Init(option, callback);
 }
 Slider.prototype.MakingPageBtn = function(pageBtn) {
@@ -260,26 +284,30 @@ Slider.prototype.eventInit= function (){
 		});
 	}
 
-	if(this.PrevArrowBtn != null)
-	this.PrevArrowBtn.addEventListener("click", function (){
-		self.PrevAction();
-	});
+	if(this.PrevArrowBtn != null){
+		this.PrevArrowBtn.addEventListener("click", function (){
+			self.PrevAction();
+		});
+	}
 	
-	if(this.NextArrowBtn != null)
-	this.NextArrowBtn.addEventListener("click", function (){
-		self.NextAction();
-	});
-	if(this.pageBtn != null)
-	for(var Btn of this.pageBtn){
-		Btn.addEventListener("click", function (e){
-			if(self.isAnimated)
-				return false;
-			e.preventDefault();
-			self.isAnimated= true;
-			var tg= getNodeindex(this);
-			self.callback.onSlideStart();//slide start callback
-			self.MoveImage(tg, 0, 0, 0);
-		})
+	if(this.NextArrowBtn != null){
+		this.NextArrowBtn.addEventListener("click", function (){
+			self.NextAction();
+		});
+	};
+
+	if(this.pageBtn != null){
+		for(var i= 0;i<this.pageBtn.length; i++){
+			this.pageBtn[i].addEventListener("click", function (e){
+				if(self.isAnimated)
+					return false;
+				e.preventDefault();
+				self.isAnimated= true;
+				var tg= getNodeindex(this);
+				self.callback.onSlideStart();//slide start callback
+				self.MoveImage(tg, 0, 0, 0);
+			});
+		};
 	}
 };
 Slider.prototype.PrevAction= function (){
@@ -301,15 +329,21 @@ Slider.prototype.NextAction= function (){
 Slider.prototype.slideEnd = function(tg) {
 	this.isAnimated= false;
 	this.setSlides.list[this.idx].classList.remove(this.setSlides.viewClass);
-	if(this.pageBtn != null)
-	this.pageBtn[this.idx].classList.remove(this.setSlides.viewClass);
+	if(this.pageBtn != null){
+		this.pageBtn[this.idx].classList.remove(this.setSlides.viewClass);
+	}
 	this.idx= tg;
 	this.setSlides.list[this.idx].classList.add(this.setSlides.viewClass);
-	if(this.pageBtn != null)
-	this.pageBtn[this.idx].classList.add(this.setSlides.viewClass);
+	if(this.pageBtn != null){
+		this.pageBtn[this.idx].classList.add(this.setSlides.viewClass);
+	}
 	this.callback.onSlideChanged();//changed callback 
 };
-Slider.prototype.PrevImage= function (prev_idx ,count1= 0, count2= 0, count3= 0){
+
+Slider.prototype.PrevImage= function (prev_idx ,count1, count2, count3){
+    var image= this.images[this.idx];
+    var iW= image.width;
+    var iH= image.height;
 	for(var i=0; i<9; i++){// cliping, drawing
 		var j= i%3;
 		
@@ -317,6 +351,7 @@ Slider.prototype.PrevImage= function (prev_idx ,count1= 0, count2= 0, count3= 0)
 	    this.ctx.beginPath();
 	    switch(j){
 	    	case 0:
+	    		var x= 
 			    this.ctx.moveTo(0, 0);
 			    this.ctx.lineTo(this.W, 0);
 			    this.ctx.lineTo(this.W, this.S);
@@ -325,14 +360,10 @@ Slider.prototype.PrevImage= function (prev_idx ,count1= 0, count2= 0, count3= 0)
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	-(this.timeline[count1]*this.W), 0, this.W, this.H,//canvas의 위치
-			    );
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, -(this.timeline[count1]*this.W), 0, this.W, this.H);
 			    this.ctx.drawImage(
 			    	this.images[prev_idx], 
-			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height,//image의 위치
-			    	-(this.timeline[count1]*this.W)-this.W, 0, this.W, this.H,//canvas의 위치
-			    );
+			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height, -(this.timeline[count1]*this.W)-this.W, 0, this.W, this.H);
 	    		break;
 	    	case 1:
 	    		this.ctx.moveTo(0, this.L);
@@ -343,13 +374,13 @@ Slider.prototype.PrevImage= function (prev_idx ,count1= 0, count2= 0, count3= 0)
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	-(this.timeline[count2]*this.W), 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	-(this.timeline[count2]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[prev_idx], 
-			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height,//image의 위치
-			    	-(this.timeline[count2]*this.W)-this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height,
+			    	-(this.timeline[count2]*this.W)-this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 2:
@@ -361,13 +392,13 @@ Slider.prototype.PrevImage= function (prev_idx ,count1= 0, count2= 0, count3= 0)
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	-(this.timeline[count3]*this.W), 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	-(this.timeline[count3]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[prev_idx], 
-			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height,//image의 위치
-			    	-(this.timeline[count3]*this.W)-this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height,
+			    	-(this.timeline[count3]*this.W)-this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    }
@@ -375,11 +406,7 @@ Slider.prototype.PrevImage= function (prev_idx ,count1= 0, count2= 0, count3= 0)
 	    this.ctx.restore();
 	}
 	var self= this;
-	if(count3<120){// 120번 돌아가면 2초고 딱 한바퀴 // 0 ~ 120 = 1slide
-		//slidetime=2000 == +1
-		// slidetime/1000
-		// plas_value= 
-		//slidetime=1000 == +2
+	if(count3<120){
 		setTimeout(function (){
 			self.PrevImage(
 				prev_idx, 
@@ -392,7 +419,7 @@ Slider.prototype.PrevImage= function (prev_idx ,count1= 0, count2= 0, count3= 0)
 		this.slideEnd(prev_idx)
 	}
 }
-Slider.prototype.NextImage= function (next_idx, count1= 0, count2= 0, count3= 0){
+Slider.prototype.NextImage= function (next_idx, count1, count2, count3){
 	for(var i=0; i<9; i++){// cliping, drawing
 		var j= i%3;
 		
@@ -408,13 +435,13 @@ Slider.prototype.NextImage= function (next_idx, count1= 0, count2= 0, count3= 0)
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	(this.timeline[count1]*this.W), 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	(this.timeline[count1]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[next_idx], 
-			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,//image의 위치
-			    	(this.timeline[count1]*this.W)+this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,
+			    	(this.timeline[count1]*this.W)+this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 1:
@@ -426,13 +453,13 @@ Slider.prototype.NextImage= function (next_idx, count1= 0, count2= 0, count3= 0)
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	(this.timeline[count2]*this.W), 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	(this.timeline[count2]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[next_idx], 
-			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,//image의 위치
-			    	(this.timeline[count2]*this.W)+this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,
+			    	(this.timeline[count2]*this.W)+this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 2:
@@ -444,13 +471,13 @@ Slider.prototype.NextImage= function (next_idx, count1= 0, count2= 0, count3= 0)
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	(this.timeline[count3]*this.W), 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	(this.timeline[count3]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[next_idx], 
-			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,//image의 위치
-			    	(this.timeline[count3]*this.W)+this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,
+			    	(this.timeline[count3]*this.W)+this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    }
@@ -471,12 +498,12 @@ Slider.prototype.NextImage= function (next_idx, count1= 0, count2= 0, count3= 0)
 		this.slideEnd(next_idx)
 	}
 }
-Slider.prototype.MoveImage = function(tg, count1= 0, count2= 0, count3= 0) {
+Slider.prototype.MoveImage = function(tg, count1, count2, count3) {
 	
 	if(this.idx==tg)
 		return this.isAnimated=false;
-	var back= this.idx>tg;// direction
-	for(var i=0; i<9; i++){// cliping, drawing
+	var back= this.idx>tg;
+	for(var i=0; i<9; i++){
 		var j= i%3;
 		
 		this.ctx.save();
@@ -492,13 +519,13 @@ Slider.prototype.MoveImage = function(tg, count1= 0, count2= 0, count3= 0) {
 			    var x= (this.timeline[count1]*this.W);
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	back? -x :x, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	back? -x :x, 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[tg], 
-			    	0, 0, this.images[tg].width, this.images[tg].height,//image의 위치
-			    	back? -x - this.W :x + this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[tg].width, this.images[tg].height,
+			    	back? -x - this.W :x + this.W, 0, this.W, this.H
 			    );
 
 	    		break;
@@ -512,13 +539,13 @@ Slider.prototype.MoveImage = function(tg, count1= 0, count2= 0, count3= 0) {
 			    var x= (this.timeline[count2]*this.W);
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	back? -x: x, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	back? -x: x, 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[tg], 
-			    	0, 0, this.images[tg].width, this.images[tg].height,//image의 위치
-			    	back? -x - this.W: x + this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[tg].width, this.images[tg].height,
+			    	back? -x - this.W: x + this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 2:
@@ -531,13 +558,13 @@ Slider.prototype.MoveImage = function(tg, count1= 0, count2= 0, count3= 0) {
 			    var x= (this.timeline[count3]*this.W);
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,//image의 위치
-			    	back? -x: x, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
+			    	back? -x: x, 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[tg], 
-			    	0, 0, this.images[tg].width, this.images[tg].height,//image의 위치
-			    	back? -x - this.W: x + this.W, 0, this.W, this.H,//canvas의 위치
+			    	0, 0, this.images[tg].width, this.images[tg].height,
+			    	back? -x - this.W: x + this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    }
@@ -561,6 +588,6 @@ Slider.prototype.thumbnail= function (){//draw first image
 	this.ctx.drawImage(
     	this.images[0], 
     	0, 0, this.images[0].width, this.images[0].height,//image의 위치
-    	this.timeline[0]*this.W, 0, 1200, 857,
+    	this.timeline[0]*this.W, 0, this.W, this.H
     );
 }
