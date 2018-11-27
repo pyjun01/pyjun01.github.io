@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<script src="js/Slider.js"></script>
-	<title>test</title>
+
+	<title>Demo</title>
 	<style>
 		.visual-slider{position:relative;width:1200px;height:857px;margin:0 auto}
 		html,body {
@@ -23,8 +24,8 @@
 		.link-list{position:absolute;bottom:0;left:0;width:100%;text-align:center;}
 		.link-list li{display:inline-block;}
 		.link-list .active a{color:#000;background:yellow}
-		button.btn-prev {left:0;}
-		button.btn-next {right:0;}
+		.slide-progress{position: absolute;width: 100%;height: 10px;bottom: -10px;}
+		.slide-progress>.progress{float: left;display: inline-block;width: 0;height: 100%;background:rgba(222,13,141, 0.4);}
 	</style>
 </head>
 <body>
@@ -61,7 +62,6 @@
 		</nav>
 	</div>
 	<h1>자동슬라이드- 자동일 경우 슬라이드영역으로 마우스들어왔을경우 자동중지, 벗어났을때 자동동작.</h1>
-
 	<h2>슬라이드2 - 자동에 버튼 다 있는</h2>
 	<div class="visual-slider slider2">
 		<canvas id="canvas2" width="1200" height="857"></canvas>
@@ -93,8 +93,10 @@
 		</nav>	
 		<nav class="link-list">
 		</nav>
+		<div class="slide-progress">
+			<span class="progress"></span>
+		</div>
 	</div>
-	
 	<h2>슬라이드3 -자동에 방향버튼만</h2>
 	<div class="visual-slider slider3">
 		<canvas id="canvas3" width="1200" height="857"></canvas>
@@ -157,7 +159,6 @@
 		<nav class="link-list">
 		</nav>
 	</div>
-	</div>
 
     <script>
     	window.onload= function (){
@@ -167,7 +168,7 @@
 				},
 				onSlideStart: function (){
 					console.log("onChangeStart");
-				},			
+				},
 			};
 	    	var slide= new Slider({
 				slideWrap:'.slider1',  //이거추가
@@ -201,6 +202,7 @@
 					list: '.slide-list li',//wrap list
 					viewClass : 'active'//버튼에두. 있을경우 클래스이거
 				},
+				progress_bar:".slide-progress>.progress",//progressbar
 				S: 200,// clip short
 				L: 400,// clip long
 			}, callback);

@@ -1,7 +1,32 @@
-function getNodeindex( elm ){//get tg.index()
+function getNodeindex( elm ){//get idx
     for(c = elm.parentNode.children, i = 0; i < c.length; i++ )
         if( c[i] == elm ) return i;
 }
+function opClass(target, name, isAdd) {//operation class
+	if(isAdd){
+		if(target.classList){
+			target.classList.add(name);
+		}else{
+			var classList= target.className.split(" ");
+			classList.push(name);
+			target.className= classList.join(" ");
+		}
+	}else{
+		if(target.classList){
+			target.classList.remove(name);
+		}else{
+			var classList= target.className.split(" ");
+			for(var i=0; i<classList.length;i++){
+				if(classList[i]==name){
+					classList.splice(i, 1);
+					break;
+			    }
+			}
+			target.className= classList.join(" ");
+		}
+	}
+}
+
 function Slider (option, callback){
 	/* options */
 	this.wrap= null;// wrap
@@ -9,8 +34,8 @@ function Slider (option, callback){
 	this.ctx= null;// ctx
 	this.Auto= null;// auto slide
 	this.Autotime= null;// auto slide time
-	this.Slidetime= 2000;// sliding time // default= 2s
-	this.plus_value= 1;// cnt plus value // default= +1 
+	this.Slidetime= 2000;// sliding time
+	this.plus_value= 1;// cnt plus value
 	this.pageBtn= null;// page btn list
 	this.PrevArrowBtn= null;// prev btn
 	this.NextArrowBtn= null;// next btn
@@ -18,7 +43,11 @@ function Slider (option, callback){
 	this.S= 150;// clip short
 	this.L= 300;// clip long
 	/* //options */
-
+	this.callback= {
+		onInit: function (){},//slide ready
+		onSlideStart: function (){},//slide change start
+		onSlideChanged: function (){},//slide change end
+	}
 	this.FPS= 60;// frame
 	this.images;// slide iamge list
 	this.W;// canvas width
@@ -150,66 +179,19 @@ function Slider (option, callback){
        -0.99996,
        -1.00000
 	];
-
-	this.callback= {
-		onInit: function (){},//slide ready
-		onSlideStart: function (){},//slide change start
-		onSlideChanged: function (){},//slide change end
-	}
-
 	var self= this;
 	this.AutoSlide= function (){
 		setInterval(function (){
 			self.NextAction();
 		}, self.Autotime+ self.Slidetime);//autoslide
 	}
-	function drawSlideImage (count){
-		this.ctx.drawImage(
-	    	this.images[this.idx], 
-	    	0, 
-	    	0, 
-	    	this.images[this.idx].width, 
-	    	this.images[this.idx].height, 
-	    	-(this.timeline[count]*this.W), 
-	    	0, 
-	    	this.W, 
-	    	this.H
-	    );
-	    this.ctx.drawImage(
-	    	this.images[prev_idx], 
-	    	0, 
-	    	0, 
-	    	this.images[prev_idx].width, 
-	    	this.images[prev_idx].height, 
-	    	-(this.timeline[count]*this.W)-this.W, 
-	    	0, 
-	    	this.W, 
-	    	this.H
-	    );
-	}
+
 	this.Init(option, callback);
 }
-Slider.prototype.MakingPageBtn = function(pageBtn) {
-	var tags= "";//return tags
-	var target= pageBtn[0]=='.'? document.querySelectorAll(this.wrap+pageBtn): document.querySelector(this.wrap+pageBtn);
-	tags+="<ul>";
-	for(var i=0; i<this.len; i++){
-		var c= i==0? "class='"+ this.setSlides.viewClass +"'": "";
-		tags+="<li "+c+">";
-		tags+="<a href='#'>";
-		tags+=i+1;
-		tags+="</a>";
-		tags+="</li>";
-	}
-	tags+="</ul>";
-	target[0].innerHTML= tags;
-	this.pageBtn= document.querySelectorAll(this.wrap+pageBtn+">ul>li");
-};
 Slider.prototype.Init= function (option, callback){
 	/* option */
-	this.wrap= option.slideWrap? option.slideWrap+" ": "";
+	this.wrap= option.slideWrap? option.slideWrap+" ": "";//wrap
 	this.canvas= option.Canvas? document.querySelector(this.wrap+option.Canvas): null;// canvas
-
 	this.ctx= option.Canvas? this.canvas.getContext('2d'): null;// ctx
 	this.Auto= typeof option.Auto === "boolean" && option.Auto;// auto slide
 	this.Autotime= typeof option.Autotime === "number"? option.Autotime: 3000;// auto slide time
@@ -224,7 +206,8 @@ Slider.prototype.Init= function (option, callback){
 		list: option.setSlides.list? document.querySelectorAll(this.wrap+option.setSlides.list): null,
 		viewClass: option.setSlides.viewClass? option.setSlides.viewClass: null,
 	};
-	// this.src= option.src != undefined? option.src: [];// image src list
+	this.bar= option.progress_bar? document.querySelector(option.progress_bar): null//progress bar//progress bar
+	this.bar_width= 0;
 	this.S= option.S? option.S: this.S;// clip short 
 	this.L= option.L? option.L: this.L;// clip long
 	/* //option */
@@ -238,8 +221,8 @@ Slider.prototype.Init= function (option, callback){
     if (callback.onInit instanceof Function) {
         this.callback.onInit= callback.onInit;
     }
-
 	/* //callback */
+
 	/* image loading */
 	var nb= 0;
 	var loaded= 0;
@@ -255,17 +238,27 @@ Slider.prototype.Init= function (option, callback){
 				self.W= self.canvas.width;//canvas Width
 				self.H= self.canvas.height;//canvas Height
 				self.len= self.images.length;//slide image length
-				if(option.pageBtn != null)
-				self.MakingPageBtn(option.pageBtn);
+				if(option.pageBtn != null){
+					self.MakingPageBtn(option.pageBtn);
+				}
 				self.thumbnail();//show first image
-
 				self.eventInit();// add EventListener
-
 				self.callback.onInit();//callback onInit
-				if(self.Auto){//if option.auto== true
+				if(self.Auto){
 					self.AutoSlide= setInterval(function (){
-						self.NextAction();
-					}, self.Autotime+ self.Slidetime);//autoslide
+						self.bar_width++;
+						if(self.bar != null){
+							self.bar.style.width= self.bar_width+"%";
+							if(self.bar_width>=100){
+								self.bar_width= 0;
+								self.bar.style.width= 0;
+								self.NextAction();	
+							}
+						}else if(self.bar == null && self.bar_width>=100){
+							self.bar_width= 0;
+							self.NextAction();
+						}
+					}, (self.Autotime+self.Slidetime)/100);//autoslide
 				}
 			}
 		}
@@ -276,14 +269,25 @@ Slider.prototype.eventInit= function (){
 	if(self.Auto){
 		document.querySelector(this.wrap).addEventListener("mouseenter", function (){
 			clearInterval(self.AutoSlide);
+			self.bar_width= 0;
 		});
 		document.querySelector(this.wrap).addEventListener("mouseleave", function (){
 			self.AutoSlide= setInterval(function (){
-				self.NextAction();
-			}, self.Autotime+ self.Slidetime);//autoslide
+				self.bar_width++;
+				if(self.bar != null){
+					self.bar.style.width= self.bar_width+"%";
+					if(self.bar_width>=100){
+						self.bar_width= 0;
+						self.bar.style.width= 0;
+						self.NextAction();	
+					}
+				}else if(self.bar == null && self.bar_width>=100){
+					self.bar_width= 0;
+					self.NextAction();
+				}
+			}, (self.Autotime+self.Slidetime)/100);//autoslide
 		});
 	}
-
 	if(this.PrevArrowBtn != null){
 		this.PrevArrowBtn.addEventListener("click", function (){
 			self.PrevAction();
@@ -294,8 +298,7 @@ Slider.prototype.eventInit= function (){
 		this.NextArrowBtn.addEventListener("click", function (){
 			self.NextAction();
 		});
-	};
-
+	}
 	if(this.pageBtn != null){
 		for(var i= 0;i<this.pageBtn.length; i++){
 			this.pageBtn[i].addEventListener("click", function (e){
@@ -315,7 +318,7 @@ Slider.prototype.PrevAction= function (){
 		return false;
 	this.isAnimated= true;
 	var prev= this.idx > 0 ? this.idx - 1 : this.len -1;
-	this.callback.onSlideStart();//slide start callback
+	this.callback.onSlideStart();
 	this.PrevImage(prev, 0, 0, 0);
 };
 Slider.prototype.NextAction= function (){
@@ -323,35 +326,16 @@ Slider.prototype.NextAction= function (){
 		return false;
 	this.isAnimated= true;
 	var next= this.idx < this.len - 1 ? this.idx + 1 : 0;
-	this.callback.onSlideStart();//slide start callback;
+	this.callback.onSlideStart();
 	this.NextImage(next, 0, 0, 0);	
 };
-Slider.prototype.slideEnd = function(tg) {
-	this.isAnimated= false;
-	this.setSlides.list[this.idx].classList.remove(this.setSlides.viewClass);
-	if(this.pageBtn != null){
-		this.pageBtn[this.idx].classList.remove(this.setSlides.viewClass);
-	}
-	this.idx= tg;
-	this.setSlides.list[this.idx].classList.add(this.setSlides.viewClass);
-	if(this.pageBtn != null){
-		this.pageBtn[this.idx].classList.add(this.setSlides.viewClass);
-	}
-	this.callback.onSlideChanged();//changed callback 
-};
-
 Slider.prototype.PrevImage= function (prev_idx ,count1, count2, count3){
-    var image= this.images[this.idx];
-    var iW= image.width;
-    var iH= image.height;
 	for(var i=0; i<9; i++){// cliping, drawing
 		var j= i%3;
-		
 		this.ctx.save();
 	    this.ctx.beginPath();
 	    switch(j){
 	    	case 0:
-	    		var x= 
 			    this.ctx.moveTo(0, 0);
 			    this.ctx.lineTo(this.W, 0);
 			    this.ctx.lineTo(this.W, this.S);
@@ -360,10 +344,12 @@ Slider.prototype.PrevImage= function (prev_idx ,count1, count2, count3){
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, -(this.timeline[count1]*this.W), 0, this.W, this.H);
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, -(this.timeline[count1]*this.W), 0, this.W, this.H
+			    );
 			    this.ctx.drawImage(
 			    	this.images[prev_idx], 
-			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height, -(this.timeline[count1]*this.W)-this.W, 0, this.W, this.H);
+			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height, -(this.timeline[count1]*this.W)-this.W, 0, this.W, this.H
+			    );
 	    		break;
 	    	case 1:
 	    		this.ctx.moveTo(0, this.L);
@@ -374,13 +360,11 @@ Slider.prototype.PrevImage= function (prev_idx ,count1, count2, count3){
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	-(this.timeline[count2]*this.W), 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, -(this.timeline[count2]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[prev_idx], 
-			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height,
-			    	-(this.timeline[count2]*this.W)-this.W, 0, this.W, this.H
+			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height, -(this.timeline[count2]*this.W)-this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 2:
@@ -392,17 +376,14 @@ Slider.prototype.PrevImage= function (prev_idx ,count1, count2, count3){
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	-(this.timeline[count3]*this.W), 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, -(this.timeline[count3]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[prev_idx], 
-			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height,
-			    	-(this.timeline[count3]*this.W)-this.W, 0, this.W, this.H
+			    	0, 0, this.images[prev_idx].width, this.images[prev_idx].height, -(this.timeline[count3]*this.W)-this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    }
-	    
 	    this.ctx.restore();
 	}
 	var self= this;
@@ -414,7 +395,7 @@ Slider.prototype.PrevImage= function (prev_idx ,count1, count2, count3){
 				count1>12&&count2<120? count2 + self.plus_value: count2, 
 				count1>24? count3 + self.plus_value: count3
 			);
-		}, 1000/this.FPS);//1초당 60번 돌아감
+		}, 1000/this.FPS);
 	}else{
 		this.slideEnd(prev_idx)
 	}
@@ -422,7 +403,6 @@ Slider.prototype.PrevImage= function (prev_idx ,count1, count2, count3){
 Slider.prototype.NextImage= function (next_idx, count1, count2, count3){
 	for(var i=0; i<9; i++){// cliping, drawing
 		var j= i%3;
-		
 		this.ctx.save();
 	    this.ctx.beginPath();
 	    switch(j){
@@ -435,13 +415,11 @@ Slider.prototype.NextImage= function (next_idx, count1, count2, count3){
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	(this.timeline[count1]*this.W), 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, (this.timeline[count1]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[next_idx], 
-			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,
-			    	(this.timeline[count1]*this.W)+this.W, 0, this.W, this.H
+			    	0, 0, this.images[next_idx].width, this.images[next_idx].height, (this.timeline[count1]*this.W)+this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 1:
@@ -453,13 +431,11 @@ Slider.prototype.NextImage= function (next_idx, count1, count2, count3){
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	(this.timeline[count2]*this.W), 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, (this.timeline[count2]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[next_idx], 
-			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,
-			    	(this.timeline[count2]*this.W)+this.W, 0, this.W, this.H
+			    	0, 0, this.images[next_idx].width, this.images[next_idx].height, (this.timeline[count2]*this.W)+this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 2:
@@ -471,17 +447,14 @@ Slider.prototype.NextImage= function (next_idx, count1, count2, count3){
 			    this.ctx.clip();
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	(this.timeline[count3]*this.W), 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, (this.timeline[count3]*this.W), 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
 			    	this.images[next_idx], 
-			    	0, 0, this.images[next_idx].width, this.images[next_idx].height,
-			    	(this.timeline[count3]*this.W)+this.W, 0, this.W, this.H
+			    	0, 0, this.images[next_idx].width, this.images[next_idx].height, (this.timeline[count3]*this.W)+this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    }
-	    
 	    this.ctx.restore();
 	}
 	var self= this;
@@ -498,14 +471,12 @@ Slider.prototype.NextImage= function (next_idx, count1, count2, count3){
 		this.slideEnd(next_idx)
 	}
 }
-Slider.prototype.MoveImage = function(tg, count1, count2, count3) {
-	
-	if(this.idx==tg)
+Slider.prototype.MoveImage = function(target_idx, count1, count2, count3) {
+	if(this.idx==target_idx)
 		return this.isAnimated=false;
-	var back= this.idx>tg;
-	for(var i=0; i<9; i++){
+	var back= this.idx>target_idx;// direction
+	for(var i=0; i<9; i++){// cliping, drawing
 		var j= i%3;
-		
 		this.ctx.save();
 	    this.ctx.beginPath();
 	    switch(j){
@@ -519,15 +490,12 @@ Slider.prototype.MoveImage = function(tg, count1, count2, count3) {
 			    var x= (this.timeline[count1]*this.W);
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	back? -x :x, 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, back? -x :x, 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
-			    	this.images[tg], 
-			    	0, 0, this.images[tg].width, this.images[tg].height,
-			    	back? -x - this.W :x + this.W, 0, this.W, this.H
+			    	this.images[target_idx], 
+			    	0, 0, this.images[target_idx].width, this.images[target_idx].height, back? -x - this.W :x + this.W, 0, this.W, this.H
 			    );
-
 	    		break;
 	    	case 1:
 	    		this.ctx.moveTo(0, this.L);
@@ -539,13 +507,11 @@ Slider.prototype.MoveImage = function(tg, count1, count2, count3) {
 			    var x= (this.timeline[count2]*this.W);
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	back? -x: x, 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, back? -x: x, 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
-			    	this.images[tg], 
-			    	0, 0, this.images[tg].width, this.images[tg].height,
-			    	back? -x - this.W: x + this.W, 0, this.W, this.H
+			    	this.images[target_idx], 
+			    	0, 0, this.images[target_idx].width, this.images[target_idx].height, back? -x - this.W: x + this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    	case 2:
@@ -558,13 +524,11 @@ Slider.prototype.MoveImage = function(tg, count1, count2, count3) {
 			    var x= (this.timeline[count3]*this.W);
 			    this.ctx.drawImage(
 			    	this.images[this.idx], 
-			    	0, 0, this.images[this.idx].width, this.images[this.idx].height,
-			    	back? -x: x, 0, this.W, this.H
+			    	0, 0, this.images[this.idx].width, this.images[this.idx].height, back? -x: x, 0, this.W, this.H
 			    );
 			    this.ctx.drawImage(
-			    	this.images[tg], 
-			    	0, 0, this.images[tg].width, this.images[tg].height,
-			    	back? -x - this.W: x + this.W, 0, this.W, this.H
+			    	this.images[target_idx], 
+			    	0, 0, this.images[target_idx].width, this.images[target_idx].height, back? -x - this.W: x + this.W, 0, this.W, this.H
 			    );
 	    		break;
 	    }
@@ -574,20 +538,50 @@ Slider.prototype.MoveImage = function(tg, count1, count2, count3) {
 	if(count3<120){
 		setTimeout(function (){
 			self.MoveImage(
-				tg, 
+				target_idx, 
 				count1<120? count1 + self.plus_value: count1, 
 				count1>12&&count2<120? count2 + self.plus_value: count2, 
 				count1>24? count3 + self.plus_value: count3
 			);
 		}, 1000/this.FPS);
 	}else{
-		this.slideEnd(tg);
+		this.slideEnd(target_idx);
 	}
 };
-Slider.prototype.thumbnail= function (){//draw first image
+
+Slider.prototype.slideEnd = function(tg) {
+	this.isAnimated= false;
+
+	opClass(this.setSlides.list[this.idx], this.setSlides.viewClass, false);
+	if(this.pageBtn != null){
+		opClass(this.pageBtn[this.idx], this.setSlides.viewClass), false;
+	}
+	this.idx= tg;
+	opClass(this.setSlides.list[this.idx], this.setSlides.viewClass, true);
+	if(this.pageBtn != null){
+		opClass(this.pageBtn[this.idx], this.setSlides.viewClass, true);
+	}
+	this.callback.onSlideChanged();//changed callback 
+};
+Slider.prototype.thumbnail= function (){
 	this.ctx.drawImage(
-    	this.images[0], 
-    	0, 0, this.images[0].width, this.images[0].height,//image의 위치
-    	this.timeline[0]*this.W, 0, this.W, this.H
-    );
+		this.images[0], 
+		0, 0, this.images[0].width, this.images[0].height,this.timeline[0]*this.W, 0, this.W, this.H);
 }
+Slider.prototype.MakingPageBtn = function (pageBtn){
+	var tags= "";
+	var target= pageBtn[0]=='.'? document.querySelectorAll(this.wrap+pageBtn): document.querySelector(this.wrap+pageBtn);
+	tags+= "<ul>";
+	for(var i=0; i<this.len; i++){
+		var c= i==0? "class='"+ this.setSlides.viewClass +"'": "";
+		tags+= "<li "+c+">";
+		tags+= "<a href='#'>";
+		tags+= "0"; // 2018-11-26 추가
+		tags+= i+1;
+		tags+= "</a>";
+		tags+= "</li>";
+	}
+	tags+= "</ul>";
+	target[0].innerHTML= tags;
+	this.pageBtn= document.querySelectorAll(this.wrap+pageBtn+">ul>li");
+};

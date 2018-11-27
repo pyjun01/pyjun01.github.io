@@ -134,7 +134,7 @@ window.onload= function(){
               // console.log(-timeline[i]*H);
               // var a= timeline[i+1]*H - timeline[i]*H;
               // console.log(a.toFixed(2));
-              console.log(timeline[i+1]? (i+1)/120*W: i/120*W, timeline[i+1]? -timeline[i+1]*H: -timeline[i]*H);
+              console.log("x: "+i/120*W+"   y: "+-timeline[i]*H);
               ctx.lineTo(timeline[i+1]? (i+1)/120*W: i/120*W, timeline[i+1]? -timeline[i+1]*H: -timeline[i]*H);
               ctx.stroke();
               ctx.closePath();
@@ -148,4 +148,8 @@ window.onload= function(){
        // 0 , 0
        // 1/2 , 1.357238833317499
        // 1 , 1
+       //  x= 150
+       //  y= 221
+
+       // y= 79
 }
