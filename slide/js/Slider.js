@@ -270,6 +270,8 @@ Slider.prototype.eventInit= function (){
 		document.querySelector(this.wrap).addEventListener("mouseenter", function (){
 			clearInterval(self.AutoSlide);
 			self.bar_width= 0;
+			if(self.bar!=null)
+				self.bar.style.width= self.bar_width+"%";
 		});
 		document.querySelector(this.wrap).addEventListener("mouseleave", function (){
 			self.AutoSlide= setInterval(function (){
