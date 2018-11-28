@@ -2,6 +2,7 @@
 /*315593*/
 *{margin: 0;padding: 0;box-sizing: border-box;user-select: none;}
 li{list-style: none;text-align: center;float: left;}
+a{text-decoration: none;color: #000;display: inline-block;width: 100%;height: 100%}
 #wrap{width: 580px;height: 100px;padding: 25px 17px;}
 
 .MenuList{height: 54px;position: relative;}

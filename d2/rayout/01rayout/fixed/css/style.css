@@ -8,6 +8,6 @@
 	display: block;
 	clear: both;
 }
-#container>.snb{text-align:center;margin-top: 10px;display:inline-block;border:1px solid #bdbdbd;background: #fff;width: 180px;}
+#container>.snb{text-align:center;margin-top: 10px;display:inline-block;border:1px solid #bdbdbd;background: #fff;width: 180px;margin-right: 2px;}
 #container>#content{text-align:center;margin-top: 10px;display:inline-block;border:1px solid #bdbdbd;background: #fff;width: 380px;height: 200px;}
 #footer{background: #e5e5e5;border:2px solid #bfbfbf;padding: 10px;}

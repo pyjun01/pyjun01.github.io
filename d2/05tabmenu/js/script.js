@@ -1,14 +1,17 @@
+var a;
 window.onload= function (){
-	var btn= document.querySelectorAll(".MenuList>li");
+	var btn= document.querySelectorAll(".MenuList>li>a");
 	for(var t of btn){
+		console.log(t);
 		t.onclick= function (e){
-			if(e.target.classList.value=="")
+			a= t;
+			if(this.parentNode.classList.value=="")
 				return;
 			var focus= document.querySelector(".focus");
 			if(focus!=null)
 				focus.classList.remove("focus");
 			
-			this==focus? this.classList.remove("focus"): this.classList.add("focus");
+			this.parentNode==focus? this.parentNode.classList.remove("focus"): this.parentNode.classList.add("focus");
 		}
 	}
 }
