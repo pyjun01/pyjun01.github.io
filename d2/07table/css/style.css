@@ -1,0 +1,23 @@
+*{margin: 0;padding: 0;box-sizing: border-box;}
+table{border-collapse: collapse;}
+#wrap{margin: 20px;}
+
+.rank{width: 614px;height: 204px;border: 1px solid #e5e5e5;border-top-width: 2px;border-bottom-width: 2px;}
+.rank tr{border-top:1px solid #e5e5e5;}
+.rank td{text-align: center;}
+.rank td:not(:last-child){border-right:1px solid #e5e5e5;}
+.rank>thead>tr{border-top:none;}
+.rank>thead>tr>td{height: 27px;background: #f5f7f9;font-size: 12px;line-height: 14px;letter-spacing: -0.8px;font-weight: bold;}
+.rank>tbody>tr>td{font-size: 12px;line-height: 25px;}
+.rank>tbody>tr>td.ranking{font-weight: bold;}
+.rank>tfoot>tr>td{font-size: 12px;line-height: 25px;font-weight: bold;}
+
+.project{width: 641px;height: 267px;margin-top: 30px;}
+.project tr{border-bottom: 1px solid #dddee2;}
+.project tr:first-child{border-top: 1px solid #dddee2;}
+.project td{padding-left: 13px;font-size: 12px;color: #000;}
+.project .title{width: 140px;padding-top: 8px;padding-left: 20px;background: #f1f1f3;color: #666666;vertical-align: top;font-weight: bold;}
+.project .title-style02{padding-top: 0;line-height: 30px;vertical-align: unset;}
+.project .text-style01{width: 180px;line-height: 30px;}
+.project .text-style02{line-height: 14px;}
+.project .text-style03{padding-top: 10px;padding-bottom: 8px;line-height: 14px;}
