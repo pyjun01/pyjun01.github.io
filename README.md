@@ -113,7 +113,7 @@ $ git config --global user.email "pyjun01@naver.com"
  * 새로 생성한 브랜치를 통해 협업하려면 ```git push branch-name```로 원격 저장소로 푸쉬해줘야합니다.
  ![branch](https://pyjun01.github.io/branch.png)
  
- 
+ <br/>
 #### 브랜치 병합
  * 다른 브랜치에서 현재 브랜치에 없는 코드가 개발되었고, 배포하기전 이를 합쳐야 할 때 사용합니다.
  * 병합 방식에서는 ```git merge```와 ```git rebase```가 존재합니다.
