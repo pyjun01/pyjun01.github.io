@@ -98,9 +98,8 @@ $ git config --global user.email "pyjun01@naver.com"
   * ```git reset```은 원격 저장소까지 컨트롤할 수 없습니다.<br>
     즉 이미 원격 저장소에 ```push```를 한 상태라면, ```git revert```를 사용해야 합니다.<br>
     또한 ```reset``` 명령어는 테스트용 브랜치에서 테스트를 마치고 다시 병합하는 과정에서 커밋 히스토리를 깔끔하게 하려고 하는데 사용하고,
-    ```revert``` 명령어는 되돌아갔다는 히스토리까지 상세하게 기록하기 위해서 사용합니다.<br>
-    
-### 브랜치
+    ```revert``` 명령어는 되돌아갔다는 히스토리까지 상세하게 기록하기 위해서 사용합니다.<br><br/>
+## 브랜치
  
 ```
   $ git branch new-branch
@@ -111,9 +110,8 @@ $ git config --global user.email "pyjun01@naver.com"
  * 브랜치 리스트는 ```git branch```로 볼수있고, 브랜치 변경은 ```git checkout branch-name```을 통해 변경가능합니다.
  * 브랜치 삭제는 ```git branch -d branch-name```을 사용합니다.
  * 새로 생성한 브랜치를 통해 협업하려면 ```git push branch-name```로 원격 저장소로 푸쉬해줘야합니다.
- ![branch](https://pyjun01.github.io/branch.png)
+ ![branch](https://pyjun01.github.io/branch.png)<br/>
  
- <br/>
 #### 브랜치 병합
  * 다른 브랜치에서 현재 브랜치에 없는 코드가 개발되었고, 배포하기전 이를 합쳐야 할 때 사용합니다.
  * 병합 방식에서는 ```git merge```와 ```git rebase```가 존재합니다.
