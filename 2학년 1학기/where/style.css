@@ -1,0 +1,65 @@
+* {
+    margin:0;padding:0;
+    user-select: none;box-sizing: border-box;
+}
+#canvas {
+    position: absolute;
+    border: 1px solid #000;
+    box-sizing: border-box;
+}
+#where {
+  position: absolute;
+  z-index: 99999;
+  color: #000;
+  font-size: 20px;
+  /* -ms-user-select: none;
+  -moz-user-select: -moz-none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  user-select: none; */
+}
+#Color_box{
+    display: inline-block;
+    width: 30px;height: 30px;
+    margin-top: 7px;
+    border: 1px solid #000;
+    background: black;
+}
+#Color_set{
+  position: absolute;
+  width: 285px;height: 330px;
+  padding: 14px;
+  border:1px solid #000;
+  background:rgb(240, 240, 240);
+}
+#Color_set>canvas{
+  /* width: 255px; */
+  float: left;
+}
+#Color_set> #Choice_color{
+  height: 15px;
+}
+#Color_set> #Choice_bw{
+  height: 255px;
+  margin-top: 15px;
+}
+#thumb{
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  position: absolute;
+  top: 11.4px;
+  border: 2.4px solid #fff;
+  cursor: pointer;
+}
+/* left= 261 */
+/* top= 37 ~ 291 */
+#bw{
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    background: rgba(255,255,255, 0.5);
+    border: 1px solid rgb(190, 190, 190);
+    border-radius: 50%;
+    cursor: pointer;
+}

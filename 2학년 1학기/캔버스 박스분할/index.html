@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas box</title>
+</head>
+<body>
+    <canvas id="canvas" width="500" height="500">
+
+    </canvas>
+    <script>
+        var canvas= document.getElementById("canvas");
+        var ctx= canvas.getContext('2d');
+        var color=["Red", "Orange", "Yellow", "Lime", "Blue", "Indigo", "Purple"];
+        function animation(x, y) {
+            for(var i=0;i<y;i++){
+                for(var j=0;j<x;j++){
+                    ctx.fillStyle= color[(i*x+j)%7];
+                    // ctx.fillStyle= `rgb(${Math.floor((Math.random()*255)+1)},${Math.floor((Math.random()*255)+1)},${Math.floor((Math.random()*255)+1)})`;
+                    fx= canvas.width / x;
+                    fy= canvas.height / y;
+                    ctx.fillRect(fx*j, fy*i, fx, fy);
+                }
+            }
+            x==y? x+=x: y+=y;
+            setTimeout(function () {
+                if(16384>=x*y)
+                animation(x, y);
+            }, 300);
+        }
+        animation(1, 1);
+    </script>
+</body>
+</html>

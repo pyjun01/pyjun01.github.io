@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Git & Github
 ============
 ![git, github](https://cdn-images-1.medium.com/max/1000/1*qwFrTMnFkcd3U9rFKwwacw.png)
@@ -147,3 +148,7 @@ merge이후 master의 example.txt의 내용
  * <https://backlog.com/git-tutorial/kr/>
  * <https://git-scm.com/>
  * <https://rogerdudler.github.io/git-guide/index.ko.html>
+=======
+# in-company
+회사에서 한거
+>>>>>>> in-company/master

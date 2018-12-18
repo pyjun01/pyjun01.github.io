@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style media="screen">
+        *{margin:0;padding:0;}
+        body{background:rgb(245, 245, 245);}
+        canvas{background: #fff;}
+        p{padding:10px;}
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <button type="button" name="button" id="btn">시작</button>
+    <p id="text">0초</p>
+    <script>
+        var init= new Init();
+        var user= new User();
+        var game= new InGame();
+        function Init() {
+            this.canvas= document.getElementById('canvas');
+            this.ctx= canvas.getContext('2d');
+            this.btn= document.getElementById("btn");
+            this.text_box= document.getElementById("text");
+            this.arrow_list=[];
+            this.start= false;
+            this.Clear= function() {
+                init.ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        }
+
+        function User() {
+            this.UserX=700;
+            this.UserY=400;
+            this.Move= function(x, y){
+                if(this.UserX+x<=780)
+                    this.UserX+=x;
+                if(this.UserY+y<=780)
+                    this.UserY+=y;
+                init.ctx.beginPath();
+                init.ctx.rect(this.UserX,this.UserY,20,20);
+                init.ctx.fillStyle="#212529";
+                init.ctx.fill();
+                init.ctx.closePath();
+                for(var i=0; i<init.arrow_list.length;i++){
+                    game.boom= game.Check(init.arrow_list[i].x, init.arrow_list[i].y, init.arrow_list[i].speed, game.num);
+                    if(game.boom)
+                        break;
+                }
+            };
+            window.addEventListener("keydown", function (e){
+                if(init.start) {
+                    switch(e.code){
+                        case "ArrowLeft":
+                        user.Move(-10,0);
+                        break;
+                        case "ArrowUp":
+                        user.Move(0,-10);
+                        break;
+                        case "ArrowRight":
+                        user.Move(10,0);
+                        break;
+                        case "ArrowDown":
+                        user.Move(0,10);
+                        break;
+                    }
+                }
+            });
+        }
+        function InGame() {
+            init.btn.addEventListener("click",function (){
+                this.style.display="none";
+                init.ctx.fillStyle="#c92a2a";
+                game.GetLocation(10,20);
+                init.start=true;
+                user.UserX=700;
+                user.UserY=400;
+                game.Start(0);
+                game.Timer();
+            });
+            this.num;
+            this.boom= false;
+            this.GetLocation= function (num, cnt) {//arrow_list에 위치랑 속도넣음
+                for(var i=0;i<cnt;i++){
+                    var x= Math.floor( (Math.random()*100) + 1 );
+                    var y= Math.floor( (Math.random()*800) + 1 );
+                    var speed= Math.floor( (Math.random()*num) + 5);
+                    init.arrow_list[i]={
+                        x:x,
+                        y:y,
+                        speed:speed
+                    };
+                }
+            }
+            this.time= Number(0);
+            this.Timer= function(Stop=false, num=this.time){
+                if(Stop){
+                    clearInterval(this.timer);
+                }else{
+                    this.tmie=num;
+                    this.timer=setInterval(function(){
+                        game.time+=0.1;
+                        init.text_box.innerText=game.time.toFixed(1)+"초";
+                    },100);
+                }
+
+            }
+            this.Start= function (number){
+                this.num= number;
+                init.Clear();
+                var cnt=0;
+                for(var i=0; i<init.arrow_list.length;i++){
+                    var x=init.arrow_list[i].x;
+                    var y=init.arrow_list[i].y;
+                    var speed=init.arrow_list[i].speed;
+
+                    if(x+(speed*number)>=canvas.width){
+                        cnt++;
+                    }else{
+                        init.ctx.fillStyle="#c92a2a";
+                        init.ctx.beginPath();
+                        init.ctx.arc(x+(speed*number), y, 10, 0, 2*Math.PI);
+                        init.ctx.fill();
+                        init.ctx.closePath();
+                    }
+                    this.boom= game.Check(x, y, speed, number);
+                    if(this.boom)
+                        break;
+                }
+                user.Move(0, 0);
+                if(cnt==init.arrow_list.length){
+                    this.GetLocation(Math.floor(game.time)*1.5, Math.floor(game.time)*3);
+                    game.Start(0);
+                }else{
+                    if(this.boom){
+                        game.over();
+                    }else{
+                        setTimeout(function (){
+                            game.Start(number+1);
+                        }, 16);
+                    }
+                }
+            }
+            this.Check= function (x, y, speed, number){
+                var Lc4={//right bottom
+                    x: x+(speed*number),
+                    y: y
+                };
+                var User1={//left top
+                    x:user.UserX,
+                    y:user.UserY
+                };
+                if( Math.abs((Lc4.x-5)-(User1.x+10))<=20 && Math.abs((Lc4.y-5)-(User1.y+10))<=20 ){
+                    console.log('a');
+                    return true;
+                }else{
+                    return false;
+                }
+            }
+            this.over= function(){
+                init.start= false;
+                this.Timer(true);
+                init.Clear();
+                init.ctx.beginPath();
+                init.ctx.font = "30px Arial";
+                init.ctx.fillText("Game Over",330,400);
+                init.ctx.closePath();
+                init.btn.style.display="inline-block";
+                this.time=0;
+                return false;
+            };
+        }
+
+            // arrow_list.map((v,n) =>{
+            //     if(boom)
+            //         return;
+            //
+            //     if(v.x+(v.speed*number)>=canvas.width){
+            //         return cnt++;
+            //     }
+            //     ctx.fillStyle="#c92a2a";
+            //     ctx.beginPath();
+            //     ctx.arc(v.x+(v.speed*number), v.y, 10, 0, 2*Math.PI);
+            //     ctx.fill();
+            //     ctx.closePath();
+            //     if( (v.x+(v.speed*number)-10<= UserX && UserX <= v.x+(v.speed*number)) || (v.x+(v.speed*number)-10 <= UserX+20 && UserX+20 <= v.x+(v.speed*number) ) ){
+            //         if( (v.y-10<= UserY && UserY <= v.y) || (v.y-10<= UserY+20 && UserY+20 <= v.y) ){
+            //             cnt=arrow_list.length;
+            //             boom=true;
+            //         }
+            //     }
+            // });
+        // var arrow= new Circle(10, 'right', speed, x, y);
+        // function Circle(size, where, val, x, y, n){
+        //     ctx.beginPath();
+        //     ctx.arc(x,y,size,0,2*Math.PI);
+        //     ctx.fill();
+        //     ctx.closePath();
+        //     this.animate=move(size, where, val, x, y, n);
+        // }
+        // function move(size, where, val, x, y, n){
+        //     setTimeout(function () {
+        //         Clear();
+        //         if(x>=canvas.width+(size/2)){
+        //             return false;
+        //         }
+        //         ctx.beginPath();
+        //         ctx.arc(x+val,y,size,0,2*Math.PI);
+        //         ctx.fill();
+        //         ctx.closePath();
+        //         move(size, where, val, x+val, y);
+        //     }, 10);
+        // }
+
+    </script>
+</body>
+</html>
