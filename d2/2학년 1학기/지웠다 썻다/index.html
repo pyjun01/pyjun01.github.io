@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>text</title>
+    <style>
+        *{margin:0;padding:0;user-select: none;}
+        html, body{width: 100%;height: 100%;}
+        #text{position: absolute;text-align: center;}
+        #text:after{content: "";display: block;clear: both;}
+        #t{
+            float: left;
+            text-align: center;
+            display: inline;
+        }
+        .cursor{
+            display: inline-block;
+            width: 2px;height: 21px;
+            margin-left: 2px;
+            background: #000;
+            animation:  0.8s cursor infinite;
+            /*  step-end= no animation */
+        }
+        @keyframes cursor{
+            0%{opacity: 1;}
+            50%{opacity: 0;}
+            100%{opacity: 1;}
+        }
+        body>span{position: absolute;left:10px;top:10px;color:#666;}
+    </style>
+</head>
+<body>
+    <span>ex) url?text=Lorem ipsum</span>
+    <div id="text" style="height: 21px;">
+        <p id="t">Lorem&nbsp;ipsum</p>
+        <span class="cursor"></span>
+    </div>
+    <!-- Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. -->
+    <script>
+        var lorem=["L","o","r","e","m","&nbsp;","i","p","s","u","m"];
+        var z=true;
+        var len;
+
+        function _Location() {
+            text.style.left= (window.innerWidth - parseInt(text.offsetWidth, 10)) / 2 + "px";
+            text.style.top= (window.innerHeight - parseInt(text.style.height, 10)) / 2 + "px";
+        }
+        function ct(){
+            var n=0;
+            if(z){
+                len=t.innerText.length-1;
+                if(len<1){z=false;n=300;}
+            }else{
+                len=t.innerText.length+1;
+                if(len>lorem.length-1){z=true;n=300;}
+            }
+            t.innerHTML="";
+            for(var i=0;i<len;i++){t.innerHTML+= lorem[i];}
+            setTimeout(function(){ct()},300+n);
+        }
+        function init() {
+            var text= document.getElementById("text");//text box
+            var t= document.getElementById('t');//text box>text
+            if(location.search.length>0 && location.search.substring(1).split("=")[1].length>0){//get값으로 텍스트를 받았는가?
+                var l=String(decodeURI(location.search.substring(1).split("=")[1]));//결과값가져옴
+                lorem= l.split("");//배열로 바꿔서 로렘에 넣어줌
+                while(lorem.indexOf(" ") != -1){
+                  lorem.splice(lorem.indexOf(" "),1,"&nbsp;");
+                }
+                t.innerText=l;//텍스트도 바꿔줌
+            }
+            _Location();
+            window.addEventListener("resize", function () {_Location();}, false);
+            t.addEventListener("DOMSubtreeModified", function () {_Location();}, false);
+            setTimeout(function () {ct();},300);
+        }
+        window.onload= function () {
+            init();
+        }
+        // var i=1000;
+        // function call() {
+        //     setTimeout(function () {
+        //         body.click();
+        //         n++;
+        //         i-= i/10;
+        //         console.log(`in setTimeout`+i);
+        //         if(i>10)
+        //             call();
+        //         // else
+        //     }, i);
+        // }
+        // call();
+    </script>
+</body>
+</html>

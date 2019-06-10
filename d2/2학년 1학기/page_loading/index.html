@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Movie</title>
+    <style>
+        *{margin:0;padding:0;box-sizing: border-box;}
+        .box{width: calc(100% / 10 - 20px);height:100px;margin:10px;border:1px solid #000;float:left;}
+        #demo{margin-top:20px;}
+        #bar{height: 5px;background: #000;transition:0.1s;position:absolute;top:0;width:10%;}
+    </style>
+    <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
+</head>
+<body>
+    <iframe style="display:none" onload="myFunction(30)" src="http://skills.yappyj.com"></iframe>
+    <div id="bar" style="width:0%;"></div>
+    <p id="demo">Loading...</p>
+    <p id="info"></p>
+    <script>
+        var bar= document.getElementById("bar");
+        var demo= document.getElementById("demo");
+        var info= document.getElementById("info");
+        document.onreadystatechange= () =>{
+            if(document.readyState=="interactive"){
+                const getday= (t) =>{
+                    var y= t.getFullYear();
+                    var m= t.getMonth()+1; // getMonth() is zero-based
+                    var d= t.getDate()-1;
+                    return y+(m>9? '': '0')+m+(d>9? '': '0')+d;
+                };
+                var key= "73effc88f63a1ad52e32e0705070ede0";
+                var d= getday(new Date());
+
+                fetch(`http://www.kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${key}&targetDt=${d}`)
+                    .then(j =>{
+                        bar.style.width= "100%";
+                        return j.json();
+                    })
+                    .then(json => {
+                        demo.innerHTML = "Loaded.";
+                        setTimeout(() =>{
+                            bar.style.display= "none";
+                        }, 100);
+                        json.boxOfficeResult.dailyBoxOfficeList.map((v,n) =>{
+                            document.getElementsByClassName("box")[n].innerHTML= `title <br />${v.movieNm}`;
+                            let clicked= false;
+                            document.getElementsByClassName("box")[n].addEventListener("click",() =>{
+                                if(!clicked){
+                                    clicked= !clicked;
+                                    fetch(`http://www.kobis.or.kr/kobisopenapi/webservice/rest/movie/searchMovieInfo.json?key=${key}&movieCd=${v.movieCd}`)
+                                    .then(j =>{
+                                        bar.style.width= "100%";
+                                        setTimeout(() =>{
+                                            clearInterval(a);
+                                            bar.style.display= "none";
+                                        }, 100);
+                                        return j.json();
+                                    })
+                                    .then(json => {
+                                        console.log(json.movieInfoResult.movieInfo);
+                                        json.movieInfoResult.movieInfo.actors.map(v =>info.innerHTML+=v.peopleNm+',');
+                                        demo.innerHTML = "Loaded.";
+                                        setTimeout(() =>{clicked= !clicked;}, 110);
+                                    });
+                                    demo.innerHTML = "Loading...";
+                                    bar.style.width= "0%";
+                                    bar.style.display= "block";
+                                    var a= setInterval(() =>{ bar.style.width=parseInt(bar.style.width, 10)+1+"%"; },200);
+                                }
+                            });
+                            console.log(v);
+                            console.log(`순위: ${v.rank}위`);
+                            console.log(`영화 제목: ${v.movieNm}`);
+                            console.log(`영화 개봉일: ${v.openDt}`);
+                            // console.log(`누적 관객수: ${v.audiAcc}`);
+                        });
+                    });
+            }
+        }
+        function myFunction(n) {
+            if(bar.style.width!="100%"){
+                bar.style.width= n+"%";
+            }
+        }
+    </script>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <div class="box"></div>
+    <iframe style="display:none" onload="myFunction(50)" src="http://skills.yappyj.com"></iframe>
+    <iframe style="display:none" onload="myFunction(70)" src="http://skills.yappyj.com"></iframe>
+</body>
+</html>

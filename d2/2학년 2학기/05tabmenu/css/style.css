@@ -1,0 +1,21 @@
+/*4cb1e5*/
+/*315593*/
+*{margin: 0;padding: 0;box-sizing: border-box;user-select: none;}
+li{list-style: none;text-align: center;float: left;}
+<<<<<<< HEAD
+=======
+a{text-decoration: none;color: #000;display: inline-block;width: 100%;height: 100%}
+>>>>>>> 441709f7582881377a1a40eaec502264cdf3e496
+#wrap{width: 580px;height: 100px;padding: 25px 17px;}
+
+.MenuList{height: 54px;position: relative;}
+.MenuList>li{cursor: pointer;width: 91px;height: 28px;background: #4cb1e5; color: #fff;line-height:28px;font-size: 12px;letter-spacing: -0.6px;margin-bottom: 1px;}
+.MenuList>li:not(:last-child){margin-right:1px;}
+.MenuList>li>ul{width: 540px;height: 0;padding-top: 10px;font-size: 12px;line-height: 14px;position: absolute;left: 0;overflow: hidden;}
+.MenuList>li>ul>li{color: #000;width: 74px;height: 14px;}
+.MenuList>li>ul>li:not(:last-child){border-right:1px solid #ddd;}
+
+.MenuList>li.focus{height: 29px;margin-bottom: 0;background: #315593;line-height: 29px;}
+.MenuList>li.focus>ul{border-top:1px solid #315593;height: 26px;}
+.item2.focus>ul{padding-left: 50px;}
+.item3.focus>ul{padding-left: 140px;}
