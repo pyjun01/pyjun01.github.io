@@ -1,0 +1,144 @@
+/* styled-components */
+.hIMiPJ {
+  margin-top: 30px;
+  padding: 15px 20px;
+  box-shadow: rgb(0 0 0 / 10%) 0px 0px 20px 0px;
+  background-color: rgb(255, 255, 255);
+}
+.kcMtBa {
+  padding: 30px 0px;
+}
+.kcMtBa:last-child {
+  padding-bottom: 0;
+}
+.kcMtBa + .sc-fznzqM {
+  border-top: 1px solid rgba(52, 52, 52, 0.2);
+}
+.MuiGrid-container {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+.MuiGrid-grid-md-3 {
+  flex-grow: 0;
+  max-width: 25%;
+  flex-basis: 25%;
+}
+.MuiGrid-grid-md-9 {
+  flex-grow: 0;
+  max-width: 75%;
+  flex-basis: 75%;
+}
+.glfmCu {
+  font-size: 16px;
+  font-weight: bold;
+  color: rgb(52, 52, 52);
+}
+.bHmBtJ > .sc-fzoVTD {
+  margin-right: 10px;
+}
+.bHmBtJ > .sc-fzoVTD ~ .sc-fzoJus {
+  color: #000;
+  font-size: 0.875rem;
+}
+.kcMtBa div > div:nth-child(2) > .sc-fzplgP {
+  margin-top: 0.875rem;
+}
+.bHmBtJ {
+  display: inline-flex;
+  -webkit-box-align: center;
+  align-items: center;
+}
+.hlbqdx.hlbqdx {
+  margin-right: auto;
+  padding: 6px 10px 5px;
+  background-color: rgb(0, 0, 0);
+  font-size: 15px;
+  font-weight: 300;
+  color: rgb(255, 255, 255);
+  cursor: pointer;
+}
+/* //styled-components */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+a { color: inherit; text-decoration: inherit; }
+ul, li { list-style: none; }
+.hide { display: none; }
+html, body, #app { width: 100vw;height: 100vh;background: #f7f7f6; }
+
+#app {
+  position: relative;
+  display: flex;
+  width: 100vw;
+  height: 100%;
+  z-index: 1;
+}
+
+.page-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 53.5px;
+}
+
+header {
+  height: 64px;
+}
+main {
+  flex: 1;
+  padding: 15px 0;
+}
+footer {
+  height: 61px;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: 200;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  color: rgb(52, 52, 52);
+}
+
+.navigation {
+  display: flex;
+  height: 46px;
+  width: fit-content;
+  margin-top: 20px;
+  background: transparent;
+  border: 1px solid rgb(87, 79, 255);
+  border-radius: 23px;
+}
+.navigation > li {
+  border-radius: 23px;
+  margin: 0px;
+}
+.tab-content {
+  display: none;
+  margin-top: 40px;
+}
+.desc {
+  display: flex;
+  align-items: flex-end;
+  -webkit-box-pack: justify;
+  justify-content: space-between;
+}
+.desc > div > p {
+  color: rgb(60, 72, 88);
+  font-size: 1rem;
+}
+.desc > div > p > span {
+  font-weight: bold;
+}
+.desc > span {
+  font-size: 15px;
+  font-weight: bold;
+  color: rgb(60, 72, 88);
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>세미나ㅏㅏㅏ</title>
+  <link rel="stylesheet" href="styled.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <input type="radio" class='hide' id="tab1" name="tabs" checked />
+  <input type="radio" class='hide' id="tab2" name="tabs" />
+  <input type="radio" class='hide' id="tab3" name="tabs" />
+  <input type="checkbox" class='hide' id="popup" />
+  <div class="popup-container">
+    <label class="bg" for='popup'></label>
+    <div class="popup-box">
+      <div class="pop-header">
+        <h2>Address List</h2>
+        <label for="popup">
+          <svg viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
+        </label>
+      </div>
+    </div>
+  </div>
+  <div id="app">
+    <input type="checkbox" class='hide' id="toggle-aside" />
+    <aside>
+      <div class="head">
+        <label for="toggle-aside">
+          <svg viewBox="0 0 24 24">
+            <path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"></path>
+            <path
+              d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z">
+            </path>
+          </svg>
+        </label>
+      </div>
+      <nav>
+        <ul>
+          <li>
+            <a href="#">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"></path>
+              </svg>
+              <span>Dashboard</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z">
+                </path>
+              </svg>
+              <span>Create Order</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg viewBox="0 0 24 24">
+                <path d="M4 14h4v-4H4v4zm0 5h4v-4H4v4zM4 9h4V5H4v4zm5 5h12v-4H9v4zm0 5h12v-4H9v4zM9 5v4h12V5H9z"></path>
+              </svg>
+              <span>Delivery</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg viewBox="0 0 24 24">
+                <path fill="none" d="M0 0h24v24H0V0z"></path>
+                <path
+                  d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.35 1-.98 1-1.72V9c0-.74-.41-1.37-1-1.72zM20 9v6h-7V9h7zM5 19V5h14v2h-6c-1.1 0-2 .9-2 2v6c0 1.1.9 2 2 2h6v2H5z">
+                </path>
+                <circle cx="16" cy="12" r="1.5"></circle>
+              </svg>
+              <span>Balance</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg width="35" height="35" viewBox="0 0 35 35" class="jss102">
+                <defs>
+                  <filter id="8iln6ahn2a" width="159.8%" height="111.3%" x="-29.9%" y="-5.7%"
+                    filterUnits="objectBoundingBox">
+                    <feOffset dy="10" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+                    <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="10">
+                    </feGaussianBlur>
+                    <feColorMatrix in="shadowBlurOuter1" result="shadowMatrixOuter1"
+                      values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.2 0"></feColorMatrix>
+                    <feMerge>
+                      <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                      <feMergeNode in="SourceGraphic"></feMergeNode>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <g fill="none" fill-rule="evenodd">
+                  <g>
+                    <g filter="url(#8iln6ahn2a)" transform="translate(-66 -372) translate(49)">
+                      <g>
+                        <path d="M0 0L35 0 35 35 0 35z" transform="translate(17 372)"></path>
+                        <path fill="#343434" fill-rule="nonzero"
+                          d="M28 4H7C5.35 4 4 5.35 4 7v21c0 1.65 1.35 3 3 3h21c1.65 0 3-1.35 3-3V7c0-1.65-1.35-3-3-3zm-7.5 21H10v-3h10.5v3zm4.5-6H10v-3h15v3zm0-6H10v-3h15v3z"
+                          transform="translate(17 372)"></path>
+                      </g>
+                    </g>
+                  </g>
+                </g>
+              </svg>
+              <span>Delivery Report</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <svg viewBox="0 0 24 24">
+                <path
+                  d="M10.09 15.59L11.5 17l5-5-5-5-1.41 1.41L12.67 11H3v2h9.67l-2.58 2.59zM19 3H5c-1.11 0-2 .9-2 2v4h2V5h14v14H5v-4H3v4c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z">
+                </path>
+              </svg>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+    <div class='page-content'>
+      <header>
+
+      </header>
+      <main>
+        <h1>Create Order</h1>
+        <ul class='navigation'>
+          <li><label for="tab1">Regular</label></li>
+          <li><label for="tab2">On-demand</label></li>
+          <li><label for="tab3">CSV</label></li>
+        </ul>
+        <div class="tab-content content1">
+          <div class='desc'>
+            <div>
+              <p class="sc-fznXWL cEvDCP">
+                <span class="sc-fzokvW lowIgj">Before 12pm</span> are delivered <span class="sc-fzokvW lowIgj">within
+                  the same day.</span>
+              </p>
+              <p class="sc-fznXWL cEvDCP">
+                <span class="sc-fzokvW lowIgj">After 12pm</span> are delivered <span class="sc-fzokvW lowIgj">the next
+                  day.</span>
+              </p>
+            </div>
+            <span>Step 1/2</span>
+          </div>
+          <div class="sc-fzplWN sc-fzonjX hIMiPJ">
+            <div class="sc-fznzqM kcMtBa">
+              <div class="MuiGrid-root MuiGrid-container">
+                <div class="MuiGrid-root sc-fznOgF glfmCu MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-3">Pickup Date
+                </div>
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-9">
+                  <div><label class="sc-fzplgP bHmBtJ"><input disabled="" type="radio" class="sc-fzoVTD Atfvz"
+                        value="2021-02-25"><span class="sc-fzoJus bPIkEp">Today</span></label></div>
+                  <div><label class="sc-fzplgP bHmBtJ"><input type="radio" class="sc-fzoVTD Atfvz" value="2021-02-26"
+                        checked=""><span class="sc-fzoJus bPIkEp">Tomorrow</span></label></div>
+                </div>
+              </div>
+            </div>
+            <div class="sc-fznzqM kcMtBa">
+              <div class="MuiGrid-root parcel-container MuiGrid-container">
+                <div class="MuiGrid-root sc-fznOgF glfmCu MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-3">Address
+                </div>
+                <div class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-9">
+                  <div class="sc-fzoWqW cdKMsY">
+                    <label
+                      class="MuiButtonBase-root MuiButton-root sc-fzoLsD sc-fzqMdD hlbqdx MuiButton-text"
+                      for='popup'
+                    >
+                      <span class="MuiButton-label">
+                        Address List
+                      </span>
+                      <span class="MuiTouchRipple-root"></span>
+                    </label>
+                    <div>
+                      <p>YongYongtesttest +820101</p>
+                      <p>9003 Tampines Street 93, Singapore 528837</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-content content2">
+          <div class='desc'>
+            <div>
+              <p class="sc-fznXWL cEvDCP">Parcels are delivered <span class="sc-fzokvW lowIgj">within 3 hours.</span>
+              </p>
+              <p class="sc-fznXWL cEvDCP">Please fill in <span class="sc-fzokvW lowIgj">the recipient information as
+                  required.</span></p>
+            </div>
+            <span>Step 1/2</span>
+          </div>
+        </div>
+        <div class="tab-content content3">
+          <div class='desc'>
+            <div>
+              <p class="sc-fznXWL cEvDCP"><span class="sc-fzokvW lowIgj">You upload a delivery order CSV file.</span>
+              </p>
+            </div>
+            <span>Step 1/2</span>
+          </div>
+        </div>
+      </main>
+      <footer>
+      </footer>
+    </div>
+  </div>
+</body>
+
+</html>
