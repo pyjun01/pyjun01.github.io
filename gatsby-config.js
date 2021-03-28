@@ -1,9 +1,8 @@
 module.exports = {
   siteMetadata: {
-    title: `Yong Log`,
+    title: `Stin`,
     author: {
       name: `Yongjun Park`,
-      summary: `Javascript Devloper`,
     },
     description: `A starter blog demonstrating what Gatsby can do.`,
     siteUrl: `https://pyjun01.github.io`,
