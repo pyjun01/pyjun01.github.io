@@ -1,3 +1,5 @@
+const { trackingId } = require('./key.json');
+
 module.exports = {
   siteMetadata: {
     title: 'Justin',
@@ -17,5 +19,16 @@ module.exports = {
     'gatsby-plugin-mdx',
     'gatsby-transformer-sharp',
     'gatsby-plugin-typescript',
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: trackingId,
+        head: false,
+        anonymize: true,
+        respectDNT: true,
+        pageTransitionDelay: 300,
+        defer: true,
+      },
+    },
   ],
 };
