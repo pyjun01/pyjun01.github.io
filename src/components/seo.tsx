@@ -5,7 +5,7 @@ interface SeoProps {
   description?: string;
   lang?: string;
   meta?: HelmetProps['meta'];
-  title: string;
+  title?: string;
 }
 
 const SEO = ({ description = '', lang = 'ko', meta = [], title }: SeoProps) => {
@@ -32,7 +32,7 @@ const SEO = ({ description = '', lang = 'ko', meta = [], title }: SeoProps) => {
     },
     {
       property: 'og:title',
-      content: title,
+      content: title || defaultTitle,
     },
     {
       property: 'og:description',

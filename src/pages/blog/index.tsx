@@ -8,7 +8,7 @@ function BlogPage() {
 
   return (
     <Layout>
-      <SEO title='All posts' />
+      <SEO description='Dev Blog' />
       <List nodes={data.allMdx.nodes} />
     </Layout>
   );
