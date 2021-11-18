@@ -2,8 +2,8 @@ const { trackingId } = require('./key.json');
 
 module.exports = {
   siteMetadata: {
-    title: 'Justin',
-    description: 'pyjun01 blog',
+    title: 'pyjun01',
+    description: 'pyjun01 블로그',
   },
   plugins: [
     'gatsby-plugin-styled-components',
