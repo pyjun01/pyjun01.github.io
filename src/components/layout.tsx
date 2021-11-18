@@ -47,7 +47,7 @@ function Layout({ pageTitle, children }: { pageTitle?: string; children: ReactNo
       <header>
         <Inner>
           <h1>
-            <Link to='/'>Justin</Link>
+            <Link to='/'>박용준</Link>
           </h1>
         </Inner>
       </header>
