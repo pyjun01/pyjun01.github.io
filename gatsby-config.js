@@ -9,6 +9,12 @@ module.exports = {
     'gatsby-plugin-styled-components',
     'gatsby-plugin-image',
     'gatsby-plugin-sharp',
+    'gatsby-transformer-sharp',
+    'gatsby-plugin-typescript',
+    'gatsby-plugin-mdx',
+    {
+      resolve: 'gatsby-plugin-mdx-frontmatter',
+    },
     {
       resolve: 'gatsby-source-filesystem',
       options: {
@@ -16,18 +22,21 @@ module.exports = {
         path: `${__dirname}/src/blog`,
       },
     },
-    'gatsby-plugin-mdx',
-    'gatsby-transformer-sharp',
-    'gatsby-plugin-typescript',
     {
       resolve: `gatsby-plugin-google-analytics`,
       options: {
-        trackingId: trackingId,
+        trackingId,
         head: true,
         anonymize: true,
         respectDNT: true,
         pageTransitionDelay: 300,
         defer: true,
+      },
+    },
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [`gatsby-remark-autolink-headers`],
       },
     },
   ],

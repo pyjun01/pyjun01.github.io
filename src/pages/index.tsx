@@ -1,4 +1,4 @@
-import BlogPage from './blog';
+import BlogPage from './v';
 
 function IndexPage() {
   return <BlogPage />;

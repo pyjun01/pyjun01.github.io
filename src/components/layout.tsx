@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import GlobalStyle from '../GlobalStyle';
 import Inner from './Inner';
 
-const Container = styled.div`
+const Container = styled.div<{ $isMain: boolean }>`
   font-family: sans-serif;
 
   header {
@@ -15,7 +15,7 @@ const Container = styled.div`
     font-weight: 700;
 
     a {
-      font-size: 44px;
+      font-size: ${({ $isMain }) => ($isMain ? '44px' : '18px')};
       color: #333333;
       text-decoration: none;
     }
@@ -38,7 +38,7 @@ function Layout({ pageTitle, children }: { pageTitle?: string; children: ReactNo
   `);
 
   return (
-    <Container>
+    <Container $isMain={!pageTitle}>
       <GlobalStyle />
       <title>
         {data.site.siteMetadata.title}
@@ -47,7 +47,7 @@ function Layout({ pageTitle, children }: { pageTitle?: string; children: ReactNo
       <header>
         <Inner>
           <h1>
-            <Link to='/'>박용준</Link>
+            <Link to='/'>pyjun01</Link>
           </h1>
         </Inner>
       </header>
