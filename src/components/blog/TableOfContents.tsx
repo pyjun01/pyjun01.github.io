@@ -8,6 +8,7 @@ const { slug } = GithubSlugger;
 
 const TableOfContentsWrapper = styled.ul`
   &&& {
+    margin-bottom: 56px;
     padding: 0;
   }
 

@@ -1,0 +1,453 @@
+---
+title: "React CSS-in-JS 시스템 만들기"
+date: "2022-06-01"
+preview: "React CSS-in-JS 시스템을 만들어봅시다."
+tag: ["javascript", "vanilla", "css-in-js"]
+---
+
+import TableOfContents from '../components/blog/TableOfContents.tsx';
+import HelloWorld from '../components/blog/css-in-js/step1/HelloWorld.tsx';
+import App2 from '../components/blog/css-in-js/step2/App';
+import App3 from '../components/blog/css-in-js/step3/App';
+
+<TableOfContents headings={props.headings} />
+
+이 포스트는 styled-components를 리버스 엔지니어링 하면서 얻은 지식을 사용해 간단한 CSS-in-JS 시스템을 만들어보는 내용이다.
+
+# 1. CSS-in-JS?
+CSS-in-JS란 스타일링에 `Javascript`를 사용하는 `CSS` 방법론이다. 그렇다면 `CSS`만 사용해도 잘만 스타일링이 될텐데 왜 스타일링에 `Javascript`를 사용할까?
+
+웹 문서의 삼위일체인 `HTML`, `CSS`, `Javascript`는 깔끔한 관심사 분리를 제공한다.<br />`HTML`은 웹 문서의 구조를 만들고 `CSS`는 UI 스타일링을 담당하고 `Javascript`는 동적인 기능들을 담당했다. 과거 콘텐츠의 대부분은 정적이였기 때문에 별다른 어려움 없이 스타일링 작업을 할 수 있었다.
+
+그러나 시간이 지남에 따라 `Javascript`가 엄청난 속도로 발전하면서 완전히 새로운 개발 생태계(SPA)가 도래했다.
+
+<figure><img src="https://media.makeameme.org/created/single-page-application.jpg" alt="SPA EVERYWHERE" /></figure>
+
+SPA에서는 더욱 복잡하고 동적인 콘텐츠, 기능, 구조들이 추가됐다.<br />점점 웹의 규모가 커지고 컴포넌트화 되면서 CSS 작업에 [여러가지 문제들](https://speakerdeck.com/vjeux/react-css-in-js?slide=2)이 발생했고, 해결법으로 CSS-in-JS가 등장한 것이다.
+
+<figure>
+  <img src="https://miro.medium.com/max/1400/1*ZktMuw3JEZFdXVdtyCwTlA.png" />
+  <figcaption>React: CSS in JS, vjeux (November 08, 2014)</figcaption>
+</figure>
+
+이제 직접 React CSS-in-JS 시스템을 만들어 보자.
+
+
+
+
+
+# 2. Tagged templates
+
+만들 시스템은 styled-components를 기반으로 하므로 먼저 Tagged templates에 대해 이해가 필요하다.
+
+템플릿 리터럴(\`)의 기능중 하나인 Tagged templates는 템플릿 리터럴을 파싱하여 함수의 인자로 넘길 수 있게 해준다.
+
+```javascript
+fn`some string here` === fn(['some string here']); // 🟢 true
+```
+
+
+
+첫번째 인자로 문자열 배열, 나머지 인자들로 삽입된 표현식을 받으며, 인자로 템플릿 리터럴을 직접 넘기는 것과 달리 표현식 값들의 타입을 유지한채 인자로 받을 수 있다는 장점이 있다.
+
+```javascript
+const aVar = 'good';
+
+fn`this is a ${aVar} day` === fn(['this is a ', ' day'], aVar); // 🟢 true
+
+fn`${true} === "true"` === fn([' === "true"'], true); // 🔴 false
+fn`${true} === "true"` === fn(['', ' === "true"'], true); // 🟢 true
+
+fn`${true} === ${false}` === fn(['', ' === ', ''], true, false); // 🟢 true
+```
+
+Tagged templates로 받은 인자를 다시 원래 string 형태로 변경하는 함수를 만들어 보자.
+
+
+
+```javascript
+const getStyle = (styleStringArray, ...interpolations) => {
+  const result = [styleStringArray[0]];
+
+  for (let i = 0, len = interpolations.length; i < len; i ++) {
+    result.push(interpolations[i], styleStringArray[i + 1]);
+  }
+
+  return result.join('');
+}
+
+
+const color = '#f00';
+
+getStyle`
+  display: flex;
+  color: ${color};
+` === `
+  display: flex;
+  color: ${color};
+` // 🟢 true
+``` 
+
+- L5: 배열에 [문자열, 표현식, 문자열, 표현식...] 순서로 값을 정렬해준다.
+- L8: 정렬된 배열을 string으로 합치면 원본 템플릿 리터럴 값이 나온다.
+
+위 코드는 styled 함수에서 사용될 예정이다.
+
+
+
+
+
+# 3. styled
+
+Tagged templates를 기반으로 ```styled``` 함수를 만들어 보자. 함수는 아래 순서로 작동할 것이다.
+
+1. 타겟 태그 or 컴포넌트를 받는다.
+2. Tagged templates로 css를 받는다.
+3. css style이 적용된 컴포넌트를 return 한다.
+
+먼저 style을 적용하지 않고 컴포넌트를 return 하는 부분까지 코드를 구성해보자.
+
+```jsx
+function styled(Tag) {
+  // Tagged templates로 style을 받는 함수를 return 한다
+}
+
+const domElements = ['a', 'abbr', 'address', 'area', ...]; // 전체 태그 리스트
+
+domElements.forEach(domElement => {
+  styled[domElement] = styled(domElement); // styled.div 형식 대응
+});
+```
+
+- L2: ```styled``` 함수는 Tagged templates로 style을 받는 함수를 return 해야 한다.
+- L8: HTML 태그의 경우 ```styled('div')```가 아니라 ```styled.div``` 형식을 주로 사용하므로, 전체 태그들을 속성으로 실행할 수 있도록 추가해준다.
+
+```jsx
+function styled(Tag) {
+  return function templateFunction(styleStringArray, ...interpolations) {
+    // Tagged templates를 설명할때 만든 getStyle을 그대로 사용한다.
+    const style = getStyle(styleStringArray, ...interpolations);
+
+    // 컴포넌트를 return 한다
+  }
+}
+
+const domElements = ['a', 'abbr', 'address', 'area', ...];
+
+domElements.forEach(domElement => {
+  styled[domElement] = styled(domElement);
+});
+```
+
+- L4: Tagged templates로 받은 파라미터는 ```getStyle``` 함수로 실제 style과 동일하게 변경시켜 준다.
+- L6: ```templateFunction``` 에서 컴포넌트를 return 해주면 기본적인 ```styled``` 함수는 마무리 된다.
+
+```jsx
+function styled(Tag) {
+  return function templateFunction(styleStringArray, ...interpolations) {
+    const style = getStyle(styleStringArray, ...interpolations);
+
+    return function WrappedStyledComponent({ children, ...props }) {
+      return (
+        <Tag {...props}>
+          <p>style: {style}</p>
+          {children}
+        </Tag>
+      );
+    }
+  }
+}
+
+const domElements = ['a', 'abbr', 'address', 'area', ...]; // 전체 태그 리스트
+
+domElements.forEach(domElement => {
+  styled[domElement] = styled(domElement); // styled.div 형식 대응
+});
+```
+
+- L7: 컴포넌트의 props들은 타겟 컴포넌트에 그대로 넘겨준다.
+- L8: style은 적용하지는 않고 일단 화면에 표시하도록 한다.
+
+전체 코드는 아래와 같다.
+
+**styled.jsx**
+
+```jsx
+const getStyle = (styleStringArray, ...interpolations) => {
+  const result = [styleStringArray[0]];
+
+  for (let i = 0, len = interpolations.length; i < len; i++) {
+    result.push(interpolations[i], styleStringArray[i + 1]);
+  }
+
+  return result.join('');
+};
+
+function styled(Tag) {
+  return function templateFunction(styleStringArray, ...interpolations) {
+    const style = getStyle(styleStringArray, ...interpolations);
+
+    return function WrappedStyledComponent({ children, ...props }) {
+      return (
+        <Tag {...props}>
+          <p>style: {style}</p>
+          {children}
+        </Tag>
+      );
+    }
+  }
+}
+
+const domElements = ['a', 'abbr', 'address', 'area', ...]; // 전체 태그 리스트
+
+domElements.forEach(domElement => {
+  styled[domElement] = styled(domElement);
+});
+
+export default styled;
+```
+
+이제 실제 App에 적용하고 결과를 확인해보자.
+
+**App.jsx**
+
+```jsx
+import styled from './styled';
+
+const color = '#f00';
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  color: ${color};
+`;
+
+const World = styled.span`
+  color: #000;
+  font-weight: bold;
+`;
+
+function App() {
+  return (
+    <Container>
+      Hello,
+      <World>World!</World>
+    </Container>
+  );
+}
+
+export default App;
+```
+
+<HelloWorld />
+
+"Hello, World!" 텍스트와 함께 적용할 style이 잘 표시되는걸 볼 수 있다.
+
+----------
+
+이제 style을 컴포넌트에 직접 적용을 해보자. 적용을 하려면 css style을 추가할 ```<style>``` Element와 style이 적용될 className이 필요하다.
+
+style을 관리할 ```Sheet class```를 만들어 보자.
+
+```js
+class Sheet {
+  constructor() {
+    document.head.appendChild(this.ele = document.createElement('style'));
+  }
+
+  // className을 생성하는 함수가 필요하다.
+}
+```
+
+- L3: 생성자 내에서 head에 ```<style>``` Element를 생성해준다.
+- L3: 생성한 ```<style>``` Element는 ```ele``` 속성으로 저장한다.
+
+className은 style에 따라 유니크하게 생성해야 하므로 hash 함수를 만들어준다.
+
+```js
+const hash = (s) =>
+  `hash${s.split('').reduce((num, t) => {
+    num = (num << 5) - num + t.charCodeAt(0);
+
+    return num & num;
+  }, 0)}`;
+```
+
+- hash 함수로 스타일을 넘기면 `hash${hashedStyle}` 형식의 문자열을 return 한다. [(참조한 stackoverflow)](https://stackoverflow.com/a/15710692)
+
+이제 hash 함수와 ```<style>``` Element를 이용해 className 생성 함수를 만들어준다.
+
+```js
+const hash = (s) =>
+  `hash${s.split('').reduce((num, t) => {
+    num = (num << 5) - num + t.charCodeAt(0);
+
+    return num & num;
+  }, 0)}`;
+
+class Sheet {
+  constructor() {
+    document.head.appendChild(this.ele = document.createElement('style'));
+  }
+
+  generateClassName(style) {
+    const styledClassName = hash(style);
+
+    const rule = `.${styledClassName} { ${style} }`;
+
+    if (!this.ele.innerText.includes(rule)) {
+      this.ele.appendChild(document.createTextNode(rule));
+    }
+
+    return styledClassName;
+  }
+}
+```
+
+- L14: hash로 className을 생성한다.
+- L16: ```selector { style }``` 형식의 css code를 생성한다.
+- L18: 이미 style이 존재하는지 체크하고 없는 rule이라면 추가해준다.
+- L22: class명을 return한다.
+
+전체 Sheet 코드는 다음과 같다.
+
+**sheet.js**
+
+```js
+const hash = (s) =>
+  `hash${s.split('').reduce((num, t) => {
+    num = (num << 5) - num + t.charCodeAt(0);
+
+    return num & num;
+  }, 0)}`;
+
+class Sheet {
+  constructor() {
+    document.head.appendChild(this.ele = document.createElement('style'));
+  }
+
+  generateClassName(style) {
+    const styledClassName = hash(style);
+
+    const rule = `.${styledClassName} { ${style} }`;
+
+    !this.ele.innerText.includes(rule) && this.ele.appendChild(document.createTextNode(rule));
+
+    return styledClassName;
+  }
+}
+
+export default Sheet;
+```
+
+완성된 class를 ```styled``` 함수에 적용해보자.
+
+**styled.jsx**
+
+```jsx
+import Sheet from './sheet';
+
+const sheet = new Sheet();
+
+// getStyle function...
+
+function styled(Tag) {
+  return function templateFunction(styleStringArray, ...interpolations) {
+    const style = getStyle(styleStringArray, ...interpolations);
+
+    const styledClassName = sheet.generateClassName(style);
+
+    return function WrappedStyledComponent({ children, ...props }) {
+      return (
+        <Tag {...props} className={styledClassName.concat(props.className ? ` ${props.className}` : '')}>
+          {children}
+        </Tag>
+      );
+    };
+  };
+}
+
+const domElements = ['a', 'abbr', 'address', 'area', ...];
+
+domElements.forEach((domElement) => {
+  styled[domElement] = styled(domElement);
+});
+
+export default styled;
+```
+
+- L11: style을 이용해 className을 생성해준다.
+- L15: className을 Tag에 추가해주고, 기존에 화면에 표시하던 style은 제거한다.
+
+className을 넘긴후 Demo를 확인해보면 style이 적용된걸 확인할 수 있다.
+
+<App2 />
+
+----------
+
+마지막으로 다른 컴포넌트를 extend 해서 새로운 컴포넌트를 만들어 보자.
+
+**App.jsx**
+
+```jsx
+// ...
+
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  color: ${color};
+`;
+
+const Container2 = styled(Container)`
+  justify-content: center;
+  color: #666;
+`;
+
+// const World...
+
+function App() {
+  return (
+    <Container2>
+      Hello,
+      <World>World!</World>
+    </Container2>
+  );
+}
+
+export default App;
+```
+
+<App3 />
+
+- L9: ```Container```를 ```styled()```로 감싸 ```Container2```를 만들었다.
+- L10 ~ 11: 기존의 ```justify-content```, ```color``` style을 override 했다.
+
+Demo를 통해 ```justify-content```, ```color``` 속성이 잘 override 된걸 확인할 수 있다.
+
+
+
+# 4. 마무리
+
+간단한 CSS-in-JS 시스템을 만들어 보았다. 포스트를 재밌게 봤다면 템플릿 리터럴로 넘긴 function에 대한 처리 부분을 직접 구현해봐도 좋을 것 같다.
+
+```jsx
+const Container = styled.div`
+  display: flex;
+  justify-content: space-between;
+  color:  ${props => props.primary ? 'white' : 'palevioletred'};
+`;
+```
+
+포스트에는 안나온 실제 라이브러리들의 기능과 최적화에 대해 궁금하다면 [공식 문서](https://styled-components.com/docs)와 [github 오픈 소스](https://github.com/styled-components/styled-components)를 참고하자.
+
+이 포스트에서 사용된 코드는 [여기](https://github.com/pyjun01/css-in-js)서 확인해볼 수 있다.
+
+
+
+
+
+# 참고
+
+- https://levelup.gitconnected.com/a-brief-history-of-css-in-js-how-we-got-here-and-where-were-going-ea6261c19f04
+- https://speakerdeck.com/vjeux/react-css-in-js?slide=2
+- https://developer.mozilla.org/en-US/docs/Web/Javascript/Reference/Template_literals

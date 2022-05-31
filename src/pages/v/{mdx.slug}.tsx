@@ -5,8 +5,9 @@ import styled from 'styled-components';
 
 import Layout from '../../components/layout';
 import SEO from '../../components/seo';
-import CodeBlock from '../../components/CodeBlock';
-import { H1, H2, H3, H4, H5, H6 } from '../../components/Title';
+import CodeBlock from '../../components/MDX/CodeBlock';
+import { H1, H2, H3, H4, H5, H6 } from '../../components/MDX/Title';
+import { A } from '../../components/MDX';
 
 const Container = styled.div`
   padding: 32px 0;
@@ -81,7 +82,7 @@ const Container = styled.div`
 function BlogPost({ data }) {
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
-      <SEO title={data.mdx.frontmatter.title} description={data.mdx.frontmatter.preview} />
+      <SEO title={data.mdx.frontmatter.title} description={data.mdx.frontmatter.preview} slug={data.mdx.slug} />
       <Container>
         <h2>{data.mdx.frontmatter.title}</h2>
         <p className='date'>{data.mdx.frontmatter.date}</p>
@@ -89,6 +90,7 @@ function BlogPost({ data }) {
           <MDXProvider
             components={{
               pre: CodeBlock,
+              a: A,
               h1: H1,
               h2: H2,
               h3: H3,
@@ -119,6 +121,7 @@ export const query = graphql`
         value
       }
       body
+      slug
     }
   }
 `;
