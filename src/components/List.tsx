@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const ListContainer = styled.ul`
   list-style: none;
+  padding: 0;
 
   @media (max-width: 680px) {
     padding-top: 32px;
@@ -12,6 +13,15 @@ const ListContainer = styled.ul`
 const Item = styled.li`
   & + & {
     margin-top: 16px;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  p {
+    margin-top: 1rem;
   }
 
   @media (max-width: 680px) {

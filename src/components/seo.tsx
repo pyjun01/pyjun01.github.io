@@ -11,10 +11,6 @@ interface SeoProps {
 }
 
 const SEO = ({ description = '', lang = 'ko', meta = [], title, slug }: SeoProps) => {
-  if (!isBrowser) {
-    return null;
-  }
-
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -31,53 +27,6 @@ const SEO = ({ description = '', lang = 'ko', meta = [], title, slug }: SeoProps
   const metaDescription = description || site.siteMetadata.description;
   const defaultTitle = site.siteMetadata.title;
 
-  const defaultMeta = [
-    {
-      property: 'og:title',
-      content: title || defaultTitle,
-    },
-    {
-      property: 'og:type',
-      content: 'website',
-    },
-    {
-      property: 'og:image',
-      content: `${window.location.origin}/${slug}-preview.png`,
-    },
-    {
-      property: 'og:url',
-      content: window.location.href,
-    },
-    {
-      property: 'og:description',
-      content: metaDescription,
-    },
-    {
-      property: 'og:site_name',
-      content: 'pyjun01 blog',
-    },
-    {
-      property: 'og:locale',
-      content: 'ko_KR',
-    },
-    {
-      name: 'description',
-      content: metaDescription,
-    },
-    {
-      name: 'twitter:card',
-      content: 'summary',
-    },
-    {
-      name: 'twitter:title',
-      content: title,
-    },
-    {
-      name: 'twitter:description',
-      content: metaDescription,
-    },
-  ];
-
   return (
     <Helmet
       htmlAttributes={{
@@ -85,8 +34,20 @@ const SEO = ({ description = '', lang = 'ko', meta = [], title, slug }: SeoProps
       }}
       title={title}
       titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
-      meta={[...defaultMeta, ...meta]}
-    />
+      meta={meta}
+    >
+      <meta property='og:title' content={title || defaultTitle} />
+      <meta property='og:type' content={'website'} />
+      <meta property='og:image' content={`https://pyjun01.github.io/${slug}-preview.png`} />
+      <meta property='og:url' content={`https://pyjun01.github.io/v/${slug}`} />
+      <meta property='og:description' content={metaDescription} />
+      <meta property='og:site_name' content={'pyjun01 blog'} />
+      <meta property='og:locale' content={'ko_KR'} />
+      <meta name='description' content={metaDescription} />
+      <meta name='twitter:card' content={'summary'} />
+      <meta name='twitter:title' content={title} />
+      <meta name='twitter:description' content={metaDescription} />
+    </Helmet>
   );
 };
 

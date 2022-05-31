@@ -14,10 +14,19 @@ const Container = styled.div<{ $isMain: boolean }>`
     color: gray;
     font-weight: 700;
 
+    h1,
     a {
-      font-size: ${({ $isMain }) => ($isMain ? '44px' : '18px')};
+      margin: 0;
+    }
+
+    a {
+      font-size: ${({ $isMain }) => ($isMain ? '32px' : '18px')};
       color: #333333;
       text-decoration: none;
+    }
+
+    @media (max-width: 680px) {
+      padding: 16px 0;
     }
   }
 

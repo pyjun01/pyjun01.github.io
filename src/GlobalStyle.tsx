@@ -185,8 +185,46 @@ const GlobalStyle = createGlobalStyle`
       display: none;
     }
 
-    img {
-      max-width: 100%;
+    font-size: 1.125rem;
+    line-height: 1.6rem;
+    word-break: break-word;
+
+    h1 {
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+      line-height: 1;
+    }
+
+    h2 {
+      margin-top: 2.5rem;
+      margin-bottom: 1.5rem;
+      line-height: 1;
+    }
+
+    h3,
+    h4,
+    h5,
+    h6 {
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      line-height: 1;
+    }
+
+    ul,
+    ol {
+      margin: 1em 0 0.75em;
+      padding-left: 25px;
+
+      > li + li {
+        margin-top: 0.25rem;
+      }
+    }
+
+    code:not(.code-preview) {
+      padding: 0.2rem 0.325rem;
+      background: rgb(26, 91, 137, 0.07);
+      border-radius: 0.325rem;
+      font-size: 80%;
     }
   }
 `;
