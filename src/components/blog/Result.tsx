@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react';
 import styled from 'styled-components';
+import { isBrowser } from '../../utils';
 
 const ResultWrapper = styled.div`
   margin: 1.5rem 0;
@@ -27,7 +28,7 @@ function Result({ children }: PropsWithChildren<{}>) {
   return (
     <ResultWrapper>
       <p>Demo</p>
-      <div>{children}</div>
+      <div>{isBrowser && children}</div>
     </ResultWrapper>
   );
 }

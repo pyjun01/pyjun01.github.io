@@ -1,16 +1,13 @@
 import { useStaticQuery, graphql } from 'gatsby';
-import { Helmet, HelmetProps } from 'react-helmet';
-import { isBrowser } from '../utils/index';
+import { Helmet } from 'react-helmet';
 
 interface SeoProps {
   description?: string;
-  lang?: string;
-  meta?: HelmetProps['meta'];
   title?: string;
   slug: string;
 }
 
-const SEO = ({ description = '', lang = 'ko', meta = [], title, slug }: SeoProps) => {
+const SEO = ({ description = '', title, slug }: SeoProps) => {
   const { site } = useStaticQuery(
     graphql`
       query {
@@ -30,12 +27,13 @@ const SEO = ({ description = '', lang = 'ko', meta = [], title, slug }: SeoProps
   return (
     <Helmet
       htmlAttributes={{
-        lang,
+        dir: 'ltr',
+        lang: 'ko',
       }}
       title={title}
       titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
-      meta={meta}
     >
+      <meta name='theme-color' content='#1a5b89' />
       <meta property='og:title' content={title || defaultTitle} />
       <meta property='og:type' content={'website'} />
       <meta property='og:image' content={`https://pyjun01.github.io/${slug}-preview.png`} />

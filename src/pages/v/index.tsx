@@ -10,20 +10,14 @@ function BlogPage() {
     <Layout>
       <Helmet
         htmlAttributes={{
+          dir: 'ltr',
           lang: 'ko',
         }}
-        meta={[
-          {
-            name: 'description',
-            content: 'pyjun01 개발 블로그',
-          },
-          {
-            name: 'keywords',
-            content: 'pyjun01,개발,개발자,개발 블로그',
-          },
-        ]}
-        link={[]}
-      />
+      >
+        <meta name='theme-color' content='#1a5b89' />
+        <meta name='description' content='pyjun01 개발 블로그' />
+        <meta name='keywords' content='pyjun01,개발,개발자,개발 블로그' />
+      </Helmet>
       <List nodes={data.allMdx.nodes} />
     </Layout>
   );

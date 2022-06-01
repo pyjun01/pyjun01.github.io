@@ -1,3 +1,5 @@
+import { isBrowser } from '../../../utils/index';
+
 const hash = (s) =>
   `hash${s.split('').reduce((num, t) => {
     num = (num << 5) - num + t.charCodeAt(0);
@@ -10,7 +12,7 @@ class Sheet {
   static item?: Sheet;
 
   constructor() {
-    if (typeof window === 'undefined') {
+    if (!isBrowser) {
       return;
     }
 
@@ -22,11 +24,13 @@ class Sheet {
       Sheet.item = new Sheet();
     }
 
+    isBrowser && !Sheet.item.tag && document.head.appendChild((Sheet.item.tag = document.createElement('style')));
+
     return Sheet.item;
   }
 
   generateClassName(style) {
-    if (typeof window === 'undefined') {
+    if (!isBrowser) {
       return '';
     }
 
