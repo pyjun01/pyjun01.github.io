@@ -4,8 +4,10 @@ module.exports = {
   siteMetadata: {
     title: 'pyjun01',
     description: 'pyjun01 블로그',
+    siteUrl: 'https://pyjun01.github.io',
   },
   plugins: [
+    'gatsby-plugin-sitemap',
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-styled-components',
     'gatsby-plugin-image',
