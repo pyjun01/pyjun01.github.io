@@ -45,6 +45,7 @@ const SEO = ({ description = '', title, slug }: SeoProps) => {
       <meta name='twitter:card' content={'summary'} />
       <meta name='twitter:title' content={title} />
       <meta name='twitter:description' content={metaDescription} />
+      <meta name='naver-site-verification' content='2a28f13354877854bb05feb3be7bf8f34ff88f05' />
     </Helmet>
   );
 };
