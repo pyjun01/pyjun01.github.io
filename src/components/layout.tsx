@@ -48,11 +48,6 @@ function Layout({ pageTitle, children }: { pageTitle?: string; children: ReactNo
 
   return (
     <Container $isMain={!pageTitle}>
-      <script
-        src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5121982141414734'
-        crossOrigin='anonymous'
-        async
-      ></script>
       <GlobalStyle />
       <title>
         {data.site.siteMetadata.title}

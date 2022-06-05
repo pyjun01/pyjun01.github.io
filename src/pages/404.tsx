@@ -1,7 +1,9 @@
-import { navigate } from '@gatsbyjs/reach-router';
+import { useEffect } from 'react';
 
 function NotFoundPage() {
-  navigate('/');
+  useEffect(() => {
+    window.location.replace('/');
+  }, []);
 
   return null;
 }
