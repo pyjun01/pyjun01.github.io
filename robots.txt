@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: http://www.example.com/sitemap.xml
+Sitemap: https://pyjun01.github.io/sitemap/sitemap-index.xml
