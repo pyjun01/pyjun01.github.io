@@ -6,13 +6,13 @@ const ListContainer = styled.ul`
   padding: 0;
 
   @media (max-width: 680px) {
-    padding-top: 32px;
+    padding-top: 2rem;
   }
 `;
 
 const Item = styled.li`
   & + & {
-    margin-top: 16px;
+    margin-top: 3rem;
   }
 
   * {
