@@ -6,6 +6,7 @@ module.exports = {
     description: 'pyjun01 블로그',
     siteUrl: 'https://pyjun01.github.io',
   },
+  trailingSlash: 'never',
   plugins: [
     'gatsby-plugin-sitemap',
     'gatsby-plugin-react-helmet',
