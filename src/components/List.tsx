@@ -41,7 +41,7 @@ function List({ nodes }) {
       {nodes.map((node) => (
         <Item key={node.id}>
           <h2>
-            <Link to={`/v/${node.slug}`}>{node.frontmatter.title}</Link>
+            <Link to={`/v/${node.slug}/`}>{node.frontmatter.title}</Link>
           </h2>
           <p>
             {node.frontmatter.preview} - {node.frontmatter.date}
