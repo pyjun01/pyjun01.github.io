@@ -81,6 +81,10 @@ function BlogPost({ data }) {
           </MDXProvider>
         </div>
       </Container>
+      <img
+        src={`https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fpyjun01.github.io/v/${data.mdx.slug}&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false`}
+        style={{ opacity: 0 }}
+      />
     </Layout>
   );
 }
@@ -88,6 +92,7 @@ function BlogPost({ data }) {
 export const query = graphql`
   query ($id: String) {
     mdx(id: { eq: $id }) {
+      id
       frontmatter {
         title
         date(formatString: "MMMM D, YYYY")
