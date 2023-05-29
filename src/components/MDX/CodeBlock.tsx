@@ -51,11 +51,23 @@ const CodeBlock = ({ children }) => {
         <Pre className={className} style={style}>
           <code className='code-preview'>
             {tokens.map((line, i) => (
-              <Line {...getLineProps({ line, key: i })}>
+              <Line
+                {...getLineProps({ line, key: i })}
+                data-change={
+                  line
+                    .map(({ content }) => content)
+                    .join('')
+                    .startsWith('++')
+                    ? 'add'
+                    : undefined
+                }
+              >
                 <LineNo>{i + 1}</LineNo>
-                {line.map((token, key) => (
-                  <LineContent {...getTokenProps({ token, key })} />
-                ))}
+                {line
+                  .filter(({ content }, i) => i >= 2 || (content !== '++' && content !== '--'))
+                  .map((token, key) => (
+                    <LineContent {...getTokenProps({ token, key })} />
+                  ))}
               </Line>
             ))}
           </code>

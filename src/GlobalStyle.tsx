@@ -226,6 +226,21 @@ const GlobalStyle = createGlobalStyle`
       border-radius: 0.325rem;
       font-size: 80%;
     }
+
+    blockquote {
+      font-size: 1rem;
+      border-left: 0.2rem solid #333;
+      margin: 1.5rem 0;
+      padding: 0.5rem 0 0.5rem 1rem;
+      
+      > p {
+        margin: 0;
+      }
+    }
+
+    [data-change="add"] {
+      background-color: #395d3f;
+    }
   }
 `;
 

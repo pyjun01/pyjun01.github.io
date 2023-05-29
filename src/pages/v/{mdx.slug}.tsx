@@ -2,12 +2,18 @@ import { graphql } from 'gatsby';
 import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { MDXProvider } from '@mdx-js/react';
 import styled from 'styled-components';
+import { Tweet, CodeSandbox } from 'mdx-embed';
 
 import Layout from '../../components/layout';
 import SEO from '../../components/seo';
 import CodeBlock from '../../components/MDX/CodeBlock';
 import { H1, H2, H3, H4, H5, H6 } from '../../components/MDX/Title';
 import { A } from '../../components/MDX';
+
+const components = {
+  Tweet,
+  CodeSandbox,
+};
 
 const Container = styled.div`
   padding: 32px 0;
@@ -75,6 +81,7 @@ function BlogPost({ data }) {
               h4: H4,
               h5: H5,
               h6: H6,
+              ...components,
             }}
           >
             <MDXRenderer headings={data.mdx.headings}>{data.mdx.body}</MDXRenderer>
