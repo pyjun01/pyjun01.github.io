@@ -24,7 +24,7 @@ function TableOfContents({ headings }: { headings: Array<{ depth: number; value:
     <TableOfContentsWrapper>
       {headings.map((heading) => (
         <Item key={heading.value} depth={heading.depth}>
-          <Link to={`#${slug(heading.value)}`}>{heading.value}</Link>
+          <a href={`#${slug(heading.value)}`}>{heading.value}</a>
         </Item>
       ))}
     </TableOfContentsWrapper>
