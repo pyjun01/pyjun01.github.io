@@ -1,5 +1,5 @@
 ---
-title: 'Million.js는 어떻게 React보다 (최대) 7️⃣0️⃣% 빠를까?'
+title: 'Million.js는 어떻게 React보다 최대 70% 빠를까?'
 date: '2023-05-29'
 preview: 'React의 Virtual DOM replacement인 Million.js의 코어 로직을 탐구하며 소개합니다.'
 tag: ['javascript', 'react', 'react reconciliation', 'million.js', 'millionjs', 'virtual dom', 'react million.js']
@@ -35,7 +35,7 @@ Million.js는 단순히 React Component를 HOC([Higher Order Component](https://
   <img src='/million-js/js-framework-benchmark.png' width='400' />
 </figure>
 
-# 어떻게 성능 최적화를 끌어냈을까?
+# 어떻게 성능 최적화를 이끌어냈을까?
 
 리액트는 잘 알려진 것처럼 virtual DOM 데이터와 diff 알고리즘으로 reconciliation 과정을 거쳐 화면을 수정한다. 그리고 이 과정은 `n`개의 node가 있는 트리에 대해 `O(n)` 복잡도를 가지게 된다. ([React Reconciliation document](https://ko.legacy.reactjs.org/docs/reconciliation.html))
 
