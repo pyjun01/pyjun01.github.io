@@ -13,7 +13,6 @@ const SEO = ({ description = '', title, slug }: SeoProps) => {
       query {
         site {
           siteMetadata {
-            title
             description
           }
         }
@@ -22,7 +21,6 @@ const SEO = ({ description = '', title, slug }: SeoProps) => {
   );
 
   const metaDescription = description || site.siteMetadata.description;
-  const defaultTitle = site.siteMetadata.title;
 
   return (
     <Helmet
@@ -31,9 +29,8 @@ const SEO = ({ description = '', title, slug }: SeoProps) => {
         lang: 'ko',
       }}
       title={title}
-      titleTemplate={defaultTitle ? `%s | ${defaultTitle}` : null}
     >
-      <meta property='og:title' content={title || defaultTitle} />
+      <meta property='og:title' content={title} />
       <meta property='og:image' content={`https://pyjun01.github.io/${slug}-preview.png`} />
       <meta property='og:url' content={`https://pyjun01.github.io/v/${slug}`} />
       <meta property='og:description' content={metaDescription} />

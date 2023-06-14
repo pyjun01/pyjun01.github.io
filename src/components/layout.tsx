@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 
-import { useStaticQuery, graphql, Link } from 'gatsby';
+import { Link } from 'gatsby';
 import styled from 'styled-components';
 
 import GlobalStyle from '../GlobalStyle';
@@ -36,23 +36,10 @@ const Container = styled.div<{ $isMain: boolean }>`
 `;
 
 function Layout({ pageTitle, children }: { pageTitle?: string; children: ReactNode }) {
-  const data = useStaticQuery(graphql`
-    query {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `);
-
   return (
     <Container $isMain={!pageTitle}>
       <GlobalStyle />
-      <title>
-        {data.site.siteMetadata.title}
-        {pageTitle ? ` | ${pageTitle}` : ''}
-      </title>
+      <title>{pageTitle}</title>
       <header>
         <Inner>
           <h1>

@@ -2,10 +2,6 @@ exports.createSchemaCustomization = ({ actions }) => {
   const { createTypes } = actions;
 
   createTypes(`
-    type SiteSiteMetadata {
-      title: String
-    }
-
     type MarkdownRemark implements Node {
       frontmatter: Frontmatter
     }
