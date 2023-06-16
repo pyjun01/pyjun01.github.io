@@ -1,6 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const googleAnalytics = `window.dataLayer = window.dataLayer || []; 
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date()); gtag('config', 'G-M9E84M22QJ');`;
+
 export default function HTML(props) {
   return (
     <html {...props.htmlAttributes}>
@@ -28,6 +32,8 @@ export default function HTML(props) {
           src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5121982141414734'
           crossOrigin='anonymous'
         ></script>
+        <script async src='https://www.googletagmanager.com/gtag/js?id=G-M9E84M22QJ'></script>
+        <script dangerouslySetInnerHTML={{ __html: googleAnalytics }} />
         {props.headComponents}
       </head>
       <body {...props.bodyAttributes}>

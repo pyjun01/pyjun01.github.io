@@ -26,17 +26,6 @@ module.exports = {
       },
     },
     {
-      resolve: `gatsby-plugin-google-analytics`,
-      options: {
-        trackingId,
-        head: true,
-        anonymize: true,
-        respectDNT: true,
-        pageTransitionDelay: 300,
-        defer: true,
-      },
-    },
-    {
       resolve: `gatsby-transformer-remark`,
       options: {
         plugins: [`gatsby-remark-autolink-headers`],
