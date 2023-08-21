@@ -18,6 +18,10 @@ const Pre = styled.pre`
     font-weight: 300;
     white-space: pre;
 
+    @media (max-width: 680px) {
+      font-size: 1.25rem;
+    }
+
     > div {
       width: fit-content;
       min-width: 100%;

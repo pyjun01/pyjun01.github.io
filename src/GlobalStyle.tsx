@@ -224,6 +224,7 @@ const GlobalStyle = createGlobalStyle`
       padding: 0.2rem 0.325rem;
       background: rgb(26, 91, 137, 0.07);
       border-radius: 0.325rem;
+      font-family: Consolas, Monaco, 'Andale Mono', monospace;
       font-size: 80%;
     }
 
@@ -232,6 +233,10 @@ const GlobalStyle = createGlobalStyle`
       border-left: 0.2rem solid #333;
       margin: 1.5rem 0;
       padding: 0.5rem 0 0.5rem 1rem;
+
+      @media (max-width: 680px) {
+      font-size: 1.3rem;
+    }
       
       > p {
         margin: 0;

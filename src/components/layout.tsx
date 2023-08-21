@@ -7,7 +7,7 @@ import GlobalStyle from '../GlobalStyle';
 import Inner from './Inner';
 
 const Container = styled.div<{ $isMain: boolean }>`
-  font-family: sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Open Sans, sans-serif;
 
   header {
     padding: 16px 0 24px;
