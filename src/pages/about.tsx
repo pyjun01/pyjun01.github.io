@@ -8,7 +8,7 @@ function IndexPage() {
   const data = usePostList();
 
   return (
-    <Layout>
+    <Layout path='/about'>
       <Helmet
         htmlAttributes={{
           dir: 'ltr',
