@@ -29,11 +29,10 @@ const Pre = styled.pre`
   }
 `;
 
-const Line = styled.div`
-  display: flex;
-`;
+const Line = styled.div``;
 
 const LineNo = styled.span`
+  display: inline-block;
   min-width: 30px;
   padding-right: 1em;
   text-align: right;
