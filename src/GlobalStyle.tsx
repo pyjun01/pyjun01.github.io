@@ -246,6 +246,15 @@ const GlobalStyle = createGlobalStyle`
     [data-change="add"] {
       background-color: #395d3f;
     }
+
+    .code_title {
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .code_title + * {
+      margin-top: 0;
+    }
   }
 `;
 

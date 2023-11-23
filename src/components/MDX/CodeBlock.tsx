@@ -1,9 +1,15 @@
-import Highlight, { defaultProps, PrismTheme } from 'prism-react-renderer';
+import Highlight, { defaultProps, PrismTheme, Prism } from 'prism-react-renderer';
 import theme from 'prism-react-renderer/themes/oceanicNext';
 import styled from 'styled-components';
 
+// Hack to *include* languages.
+// @ts-ignore
+(typeof global !== 'undefined' ? global : window).Prism = Prism;
+require('prismjs/components/prism-kotlin');
+require('prismjs/components/prism-swift');
+
 const Pre = styled.pre`
-  overflow-x: scroll;
+  overflow-x: auto;
 
   border-radius: 0.166667rem;
   box-shadow: rgb(20 20 20 / 27%) 1px 1px 20px;
