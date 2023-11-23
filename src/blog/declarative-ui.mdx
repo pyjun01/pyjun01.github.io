@@ -1,0 +1,720 @@
+---
+title: 'Declarative UI 생각하기'
+date: '2023-11-24'
+preview: '선언형 UI와 그 요소들을 생각하고 플랫폼별 형태를 살펴봅니다.'
+tag: ['declarative UI', '선언형 UI', 'component', '컴포넌트', 'composability', 'reactive', 'reactivity', 'react', 'svelte', 'Android', 'Jetpack Compose', 'iOS', 'SwiftUI']
+---
+
+import TableOfContents from '../components/blog/TableOfContents.tsx';
+
+# 들어가기 전에
+
+UI 개발 패러다임은 Imperative(명령형)에서 Declarative(선언형)로의 전진이 과거부터 지속해서 이루어져 왔고 현재도 진행 중이다. Web은 이미 2010년대에 SPA 기반의 Declarative UI들로 넘어왔고, App은 현재 iOS의 SwiftUI와 Android의 Jetpack Compose로 전환의 과정 중에 있다.
+
+이 글은 Declarative UI에 대한 생각을 공유하는 글이다. 글을 읽고 얻을 수도 있는 건 다음과 같다.
+- <b>Declarative UI</b>에 대한 필자(= Web FE가 사고의 중심인 개발자)의 멘탈모델
+- 주력 플랫폼, 언어, 프레임워크가 아닌 곳의 Declarative UI 코드에 대한 조금이나 마의 익숙함
+
+<TableOfContents headings={props.headings.slice(1)} />
+
+# Declarative, Imperative
+
+Declarative UI란 무엇일까? 그 전에 우선 <b>Declarative</b>가 무엇인지를 알 필요가 있다. 프로그래밍에서의 Declarative는 우리에게 매우 친숙한 Imperative와 같이 비교되며 가끔은 반대 개념으로도 언급되곤 한다.
+
+<strong>Imperative(명령형) = What + How</strong><br />
+Imperative는 목표(What)와 목표를 어떻게(How) 달성할지 개발자가 전부 직접 작성하는 개발 접근법이다. 무엇을 원하는지 목표와 목표를 어떻게 구현할지 세부 사항 전부 직접 처리를 해주어야 하기 때문에 개발자에게 많은 책임을 실어준다.
+
+당장 주로 쓰이는 현대의 대부분 프로그래밍 언어부터 극 저수준의 어셈블리어와 기계어까지 기반이 Imperative 형태이기 때문에 당연하게도 대부분 개발자는 Imperative 기반 사고로 개발을 시작을 하게 된다.
+
+<strong>Declarative(선언형) = What</strong><br />
+Declarative는 목표(What)를 중심으로만 작성하며 어떻게(How)에 대해서는 직접 작성하지 않는 개발 접근법이다. 무엇을 원하는지 작성하면 어떻게 구현할지 세부 사항은 외부에서 처리해 주는 방식으로 이루어지며, 개발자의 책임이 줄어들고 관심사가 좁혀지게 된다.
+
+Declarative 개념은 OOP 만큼 오래됐고 이미 깊숙이 침투해 있기 때문에 Declarative Language라 불리는 여러 DSL들도 친숙할 것이다. (e.g. SQL, HTML, CSS 등)
+
+## 이분법이 아닌 스펙트럼
+
+Declarative는 Imperative에서 What(app의 본질)과 How(app 구현에 대한 세부 사항)가 분리되어 있고 그 중 What만 작성하는 형태이다. 즉, Declarative는 추상화된 Imperative와 동일하다 볼 수 있다.
+
+<figure>
+  <img src='/declarative-ui/abstraction.jpg' />
+  <figcaption><a href='https://drawpaintacademy.com/the-bull/' target='_blank'>Pablo Picasso, The Bull, 1945</a></figcaption>
+</figure>
+
+Imperative와 Declarative는 추상화 수준을 기준으로 나누어지며, 둘은 이분법이 아닌 스펙트럼(디지털이 아닌 아날로그) 형태이다. 코드는 Imperative와 Declarative 사이를 오가며 추상화 수준이 올라갈수록 Declarative에 가까워진다.
+
+기타 추상화 작업, 외부 lib, pkg의 사용 등등 모두 불필요한 정보(How)는 숨기고 필요한 정보(What)만을 외부로 보여주며 세부 사항은 알아서 처리한다. 그렇게 세부 사항이 숨겨질수록 개발자가 작성하는 측의 코드는 더욱더 Declarative에 가까워지게 된다.
+
+<b>결론</b>
+
+Declarative는 Imperative와 반대의 개념이 아닌 추상화된 Imperative를 사용하는 코드이고 Declarative 코드 어딘가 보이지 않는 곳(language, framework, ...)에서 Imperative 코드가 굴러가고 있다.
+
+<figure>
+  <img src='/declarative-ui/python.png' />
+  <figcaption>Python syntax</figcaption>
+</figure>
+
+## 시간과 Declarative의 관계
+
+Declarative의 기준을 추상화의 수준이라고 했는데 프로그래밍은 근본적으로 시간의 흐름에 따라 추상화의 수준이 점점 높아지는 경향을 가지고 있다.
+
+단순 언어 레벨에서 생각해 봐도 기계어로 시작해 어셈블리어에서 고급 프로그래밍 언어까지 계속 사람이 읽기 쉽게 구성되며 추상화된다. 비단 언어뿐 아니라 프레임워크와 라이브러리, 직접적인 코드의 바깥 영역인 CI/CD, Infra 관련 등 모두 과거와 비교해 보면 엄청나게 추상화되어 있다.
+
+이렇게 시간의 흐름에 따라 프로그램 기반의 추상화 수준이 높아질수록 과거의 코드는 현재의 Declarative와 비교해 Imperative에 가까워질 것이며 그렇게 계속 새로운 Declarative가 나타날 것이다.
+
+<p className='code_title'>React v0.3.0, 10년 전의 Declarative UI</p>
+
+```jsx
+
+/** @jsx React.DOM */
+
+var Timer = React.createClass({
+  getInitialState: function() {
+    return { name: '' };
+  },
+  onInputChange: React.autoBind(function (event) {
+    this.setState({ name: event.target.value });
+  }),
+  onAlertButtonClick: React.autoBind(function () {
+    alert(this.state.name);
+  }),
+  render: function() {
+    return (
+      <div>
+        <div>
+          <input
+            value={this.state.name}
+            onChange={this.onInputChange}
+          />
+          <span className='double'>{this.state.name + this.state.name}</span>
+        </div>
+        <button
+          onClick={this.onAlertButtonClick}
+        >
+          <img src='alert.png' alt='alert' />
+          Show Alert
+        </button>
+      </div>
+    );
+  }
+});
+
+React.renderComponent(
+  <Timer />,
+  document.body
+);
+```
+
+> 조금 오버해서 궁극적으로 추상화의 끝에 있는 온전한 정의만으로 개발할 수 있다면 그게 Declarative의 최종본 아닐까? 현재의 AI가 프로그램 일부를 만드는 데 도움을 주는 것이 프로그램 전체로 확장돼서 정의만 하면 알아서 프로그램이 돌아가는 것이다.
+
+# Declarative UI
+
+Declarative UI = UI에 대한 추상화 레이어가 존재해서 UI를 보다 Declarative에 가깝게 개발할 수 있게 해주는 기술
+
+현재의 Web/Mobile app을 기준으로는 React와 기타 web framework들, Jetpack Compose, SwiftUI, Flutter 등이 Declarative UI 기술로 나와 있다.
+
+<figure>
+  <img src='/declarative-ui/framework.png' />
+  <figcaption>React, Jetpack Compose, SwiftUI, Svelte, Flutter</figcaption>
+</figure>
+
+## 우린 이미 Declarative UI를 하고 있었다
+
+현재의 Declarative UI framework보다 먼 이전에도 Web은 HTML, App은 XML(Android Layout, iOS Storyboard) 같은 마크업 언어를 사용해서 이미 UI를 추상화된 형태로 선언했었다.
+
+<p className='code_title'>e.g. HTML</p>
+
+```html
+<!-- UI 선언 -->
+<div>
+  <div>
+    <input type='text' />
+    <span class='double'></span>
+  </div>
+  <button>
+    <img src='alert.png' alt='alert' />
+    Show Alert
+  </button>
+</div>
+```
+
+하지만 기존 마크업 언어를 통한 UI는 동적 UI, data와 UI의 연결 같은 런타임의 동적 영역을 전부 커버하지 못하는 등의 한계가 있었고, 별도 언어의 런타임 코드 레벨에서 UI를 직접 선택해 제어해야 했다.
+
+<p className='code_title'>e.g. Web Vanilla Javascript</p>
+
+```javascript
+const input = document.querySelector('input');
+const double = document.querySelector('.double');
+const button = document.querySelector('button');
+
+let name = ''; 
+
+input.onchange = ({ target: { value }}) => { 
+  name = value;
+  double.innerHTML = name.repeat(2);
+}
+
+button.onclick = () => {
+  alert(name);
+}
+```
+
+이런 과거 Declarative UI의 문제점을 개선하려는 시도들이 지속해서 있어 왔고 그렇게 현재의 Declarative UI는 추상화 수준을 더 높여서 정적/동적 UI, data(state)와 UI의 연결 등 UI의 구성을 모두 동일한 레벨에서 작성하며 보다 데이터와 컴포넌트에 집중한 형태로 개발된다.
+
+<p className='code_title'>e.g. React</p>
+
+```jsx
+function App() {
+  // data 선언
+  const [name, setName] = useState(''); // name data
+
+  // UI 선언
+  return (
+    <div>
+      <div>
+        <input
+          value={name}
+          onChange={({ target: { value }}) => {
+            setName(value);
+          }}
+        />
+        <span className='double'>{name.repeat(2)}</span>
+      </div>
+      <button
+        onClick={() => alert(name)}
+      >
+        <img src='alert.png' alt='alert' />
+        Show Alert
+      </button>
+    </div>
+  );
+}
+```
+
+## 현재의 Declarative UI
+
+`UI = f(state)`
+
+현재의 Declarative UI는 보통 아래와 같은 특징을 지니고 있다.
+
+<b>1. function, class 혹은 file 같은 코드를 묶을 수 있는 수단을 이용해 컴포넌트를 생성한다.</b>
+
+컴포넌트를 중심으로 app을 만들어 가며, 컴포넌트에는 각각의 목적에 맞는 기능과 UI를 정의한다.<br />
+framework마다 컴포넌트의 형태가 정해져 있으며, 코드를 묶을 수만 있다면 형태나 구조에 상관없이 컴포넌트로 사용이 가능하다.
+> 다른 메이저한 framework들은 대부분 function을 주로 사용하지만, SwiftUI의 경우 struct, Flutter의 경우 class를 사용한다. [Svelte framework](https://svelte.dev)의 경우 특이하게 file 단위로 컴포넌트를 정의한다.
+
+<b>2. dynamic/static에 무관하게 최종 UI의 모습(컴포넌트가 나타낼 수 있는 모든 UI)을 <strong>Component</strong>에 선언한다.</b>
+
+위의 React example을 보면 static 영역과 dynamic 영역 구분 없이 하나의 tree에 선언되어 있다. 이처럼 static/dynamic 선언을 같은 곳에 하고 둘 사이에 구분이 크게 없어 전환을 심리스하고 자유롭게 할 수 있다.
+
+<b>3. 컴포넌트를 위한 데이터로 <b>state</b>가 존재한다.</b>
+
+컴포넌트의 목적을 이루기 위해 필요한 데이터를 state로 보관하며, 대부분 state는 UI에 대한 상태 혹은 비즈니스 로직 데이터이다. (e.g. to-do app의 todo list 데이터, modal의 표시 여부)<br />
+보통 component(local) level과 global(app) level로 나뉘며, state 선언은 간단하게 컴포넌트 내부에서 특정 state 생성 함수를 호출하거나, state annotation을 붙인 필드 정도로 할 수 있다.
+
+<b>4. data와 UI의 연결은 컴포넌트에서 직접 표현한다.</b>
+
+data와 UI를 컴포넌트 레벨에서 바로 연결할 수 있고, 문법적으로도 둘의 연결을 직관적으로 지원해 준다.
+
+<b>5. UI 수정에 대한 권한은 state가 가지며 state가 변경되면 UI는 자동으로 수정된다.</b>
+
+state가 변경되면 컴포넌트가 리렌더링되어 UI가 자동으로 수정된다. 별도 force re-render 함수를 호출하는 게 아닌 이상 state가 변경되는 게 아니면 UI 수정을 하지 않는다. (간접적으로든 직접적으로든 state에 의해 업데이트된다)
+
+이런 성질을 Reactivitiy라 부른다.
+
+<b>6. 컴포넌트는 여러 번 호출되어도 문제가 없도록 설계한다.</b>
+
+프레임워크 구성에 따라 다르지만, 컴포넌트 리렌더링을 위해서는 컴포넌트(or 컴포넌트의 일부 로직)를 새로 호출해야 한다. 이때 컴포넌트가 반복 호출을 대비하지 않고 짜인다면 그 컴포넌트는 정상 동작이 불가능할 것이다. (e.g. state가 호출될 때마다 초기화 된다던가)<br />
+이와 같은 문제들을 막기 위해 컴포넌트는 재실행해도 문제가 없도록 작성한다.
+
+<br />
+
+위 특징들은 대부분 Declarative UI framework에서 찾아볼 수 있으며, 특히 Web 개발자들에게는 너무나 당연한 점들이다.
+
+## 현실 세계 Declarative UI 장점/단점
+
+지금까지 개념적인 부분을 설명했다. 그래서 사용하면 실제로 어떤 장점/단점이 있을까?
+
+<b>장점</b>
+
+- 직관적임
+- 변경이 쉬움
+- 테스트가 쉬움
+- 개발자의 관심사를 좁혀주고 책임을 덜어가 줌 (개발자의 직접적인 코드에 의한 잠재적 버그 포인트들이 사라짐)
+- 대부분 hot reload가 일부라도 가능함
+- 러닝 커브를 낮춰주고 멀리 보면 개발자 풀을 더 확장해 줌
+- 하나의 언어로 UI 개발을 편리하게 할 수 있음
+
+<b>단점</b>
+
+- framework가 app size와 build time에 악영향을 끼칠 수 있음
+- 개발자를 대신해 framework가 처리해 주는 부분을 제대로 이해하지 못하면 역으로 버그가 발생할 수 있음
+- 모바일의 경우 Jetpack Compose/SwiftUI가 비교적 새로운 것들이기 때문에 기존의 몇몇 기능은 아직 지원하지 않을 수 있고 커뮤니티 수준이 기존에 비해 낮을 수 있음
+
+# Declarative UI의 핵심 요소들과 특성
+
+현재의 Declarative UI를 이루는 몇 가지 요소들이 있다. 이 요소들은 플랫폼, 언어, 프레임워크에 따라 다를 수는 있어도 얼추 비슷한 형태를 이루고 있다.
+
+## Component
+
+기본적으로 UI를 추상화된 형태로 "선언"하고 사용할 수 있어야 하는데, 이 첫 단추를 채우는 역할이 바로 컴포넌트로 현재 Declarative UI의 핵심이 되는 요소이다.
+
+UI에서의 컴포넌트는 개발자마다 플랫폼, 프레임워크, 속한 환경이 서로 다르다 보니 정의가 꽤 많이 달라진다. 필자는 "app을 이루는 조합 가능한 기능(UI) 조각"이라 생각하고 있다.<br />
+컴포넌트는 각각의 목적을 가지고 있으며 UI를 그리거나, 어떨 때는 UI와 관련 없어 보이는 외부 작업을 처리하기도 한다. 이런 각각의 컴포넌트 조각들이 모여 합쳐지면 하나의 온전한 app이 되는 것이다.
+
+컴포넌트의 최소 구성은 name, property, children으로 되어 있으며 추가로 state, computed, side-effect 등등이 존재할 수 있다.
+
+UI를 만들려면 최소 단위의 요소들(`Text`, `Grid`, `Image` 등)이 필요한데 이건 framework가 컴포넌트화해서 built-in으로 제공해 준다. (e.g. Web = HTML tag들, App = Text, Button, Grid, ...) 개발자는 built-in 요소들을 기반으로 custom component를 만들어서 조립하고, 재사용해 app을 빠르게 구축할 수 있다.
+
+<figure>
+  <img src='/declarative-ui/component.png' />
+</figure>
+
+### Property
+
+상위 컴포넌트가 하위 컴포넌트에 전달하는 property 데이터를 말한다. 제일 대표적인 컴포넌트 간에 데이터 공유 방법이다.
+
+### Composability
+
+컴포넌트들의 조합과 재사용을 통해 상위 수준의 컴포넌트를 만들 수 있는 특성을 말한다. Composability라는 특성 덕분에 컴포넌트를 더 작은 크기로 빠르고 유연하게 만들 수 있다.
+
+## State
+
+컴포넌트가 목적을 이루기 위해 필요한 data로 Component의 핵심 요소가 된다. UI 표시를 위해서는 source data가 필요한데 해당 data 역할을 (간접적으로라도) 보통 state가 하며 UI가 아닌 다른 목적으로 사용하기도 한다. 
+
+Reactivity가 적용된 대부분의 현재 프레임워크들은 state가 Observable 데이터로 취급되어 state의 변경에 따라 UI가 업데이트된다.
+
+<figure>
+  <img src='/declarative-ui/flow.png' />
+</figure>
+
+## Reactivity
+
+현재의 Declarative UI는 Reactivity라는 특성을 가지는데 state가 변화하면 그에 반응해 UI가 자동으로 변경되는 것만을 말한다. Reactivity는 UI 변경에 대한 trigger를 state에 엮어서 추상화한 개념인 것이다.
+
+Reactivity의 핵심 idea는 개발자의 관심사를 state(data)와 그에 따른 UI에만 집중하게 하고 UI의 실질적인 제어와 수정은 framework에 떠넘기는 거다. 생각해 보면 UI 개발자의 주요 업무는 data를 구성하고 그 data를 컴포넌트를 통해 UI로 만드는 것이기 때문에 원천이 되는 data에 초점을 맞추게 해주는 패턴은 충분히 유의미하고 이러한 패턴이 계속 사용되고 나타나는 이유이기도 하다.
+
+## Computed
+
+computed란 컴포넌트 레벨에서 cache 처리된 값을 말하며 cache 처리를 위한 의존성 데이터를 가진다. 의존성 데이터가 변경되지 않는 한 기존 cache 결괏값을 유지하며, 외존성 데이터가 변경되면 재계산하여 결괏값을 변경한다.
+
+computed가 필요한 경우는 크게 두 가지이다.
+1. 컴포넌트가 리렌더링되어서 재호출해도 기존 값을 유지할 필요가 있을 때
+2. 특정 값이 변경될 때만 계산되는 값이 필요할 때
+
+엑셀로 비유하면 computed 처리에 대한 이해가 쉽게 된다.
+```
+------------------------------------------------------------------------
+| A | B |   C   |    D    |    E   |    F    |            G            |
+------------------------------------------------------------------------
+| 1 | 2 | Hello | =A1+10  | =B1+10 | =D1+E1  | =CONCAT(C1, ", World!") |
+------------------------------------------------------------------------
+```
+<figure>
+    <img src='/declarative-ui/excel.png' />
+    <figcaption></figcaption>
+  </figure>
+엑셀의 셀 타입 중에는 일반값(A1, B1, C1)을 가지는 normal cell과 formula(D1, E1, F1, G1)를 통해 계산된 값을 가지는 computation cell이 존재한다. 여기서 normal cell은 외부 데이터들이고 computation cell이 computed라 볼 수 있다.
+
+computation cell은 formula가 의존하는 셀(의존성 데이터)들을 알고 있으며 자신의 값을 유지하다가 의존 셀의 값이 변경되면 formula를 재계산해서 값을 변경할 것이다. 또한 computation cell이 다른 computation cell의 의존 셀이 될 수도 있다.<br />
+computed도 동일하다. 값을 유지하다 의존성 데이터가 변경된다면 재계산하여 값을 변경하며 다른 computed의 의존성 데이터가 될 수도 있다.
+
+## Lifecycle
+
+컴포넌트는 lifecycle을 가지는데 크게 보면 component가 UI tree에 포함돼서 최초로 실행되고 -> 업데이트되고 -> 결국 tree에서 삭제됨으로 마무리되는 주기이다. (lifecycle 구성은 framework마다 달라진다)
+
+보통 그 주기의 특정 event(ex: mount(AOS: initial composition, iOS: appear), update(AOS: recomposition), unmount(iOS: disappear), ...)에 callback을 실행시킬 수 있게 지원해 준다.
+
+## Side-effect
+
+컴포넌트 context 외부 작업이 필요하거나, 컴포넌트 데이터 변경에 따른 부수효과(callback 실행)가 필요할 때 사용한다.<br />
+side-effect는 유난히 framework마다 구성이 천차만별로 되어 있으며, lifecycle method를 side-effect로 처리하는 경우도 많다.
+
+side-effect 특성상 작동을 정확히 이해하지 않으면 버그 포인트가 될 확률이 높기 때문에 잘 고려해서 사용해야 하는 기능이다.
+
+# 플랫폼별 Declarative UI의 구현
+
+Declarative UI의 요소들과 특성을 알아봤으니 플랫폼별 Declarative UI 도구들이 어떻게 구현할 수 있게 만들어 뒀는지 살펴보자.
+
+예시 코드는 간단한 Counter를 기반으로 했으며 아래 요소들을 사용하려 했다.
+- Component
+- State
+- Computed
+
+특정 플랫폼이나 언어에 익숙지 않다고 해도 설명과 코드를 보고 플랫폼별 구현을 비교하면 UI 공통의 모양이 보이고 파악할 수 있을 것이다.
+
+> UI 예시가 목적이기 때문에 Best Practice가 아니며 전체 API를 설명하지 않았다. 실제 제품 레벨의 코드는 아래 예시들과 많이 다르게 구성된다.
+
+## Web (React)
+
+웹은 도구가 매우 많고 계속 새롭게 나오고 있지만 사실상 스텐다드인 React를 예시로 삼았다.
+
+### Component
+
+React의 Component는 `ReactElement`를 return 하는 함수로 표현한다.
+> `ReactElement` = JSX(아래의 XML 형태의 코드) or `null`
+
+- `children`은 함수의 return 값인 JSX 선언이 되며, XML과 유사한 문법이기 때문에 tree를 손쉽게 구성할 수 있다.
+- `property`는 함수의 parameter이며 JSX attribute가 그대로 함수 parameter로 전달돼서 property가 된다. (JSX의 children은 컴포넌트에 `children` property로 전달된다)
+
+```jsx
+// App component
+function App() {
+  // children tree
+  return (
+    <div>
+      {/* onClick property 넘기기 */}
+      <CustomButton onClick={() => console.log('decrease')}>
+        {/* children property 넘기기 */}
+        -
+      </CustomButton>
+      <span>0</span>
+      <CustomButton onClick={() => console.log('increase')}>
+        +
+      </CustomButton>
+    </div>
+  );
+}
+
+// children, onClick property를 parameter로 받아옴
+function CustomButton({ children, onClick }) {
+  return (
+    <button className="btn btn-primary" onClick={onClick}>{children}</button>
+  );
+}
+```
+- `div`, `span`, `button`은 built-in component이다.
+- 함수로 직접 만든 컴포넌트도 built-in component들과 동일한 형태로 사용된다.
+- 버튼에는 `App` 컴포넌트가 property로 넘긴 children text가 보이며, 클릭하면 property의 `onClick` 함수가 실행되어 console log가 찍히게 된다.
+
+- `CustomButton`의 `className`은 component 예시를 위해 세팅해 둔 것이고 중요한 게 아니니 무시하자.
+
+<CodeSandbox codeSandboxId='react-component-props-children-w3jrmc'/>
+
+### State
+
+React의 state는 `useState`를 주로 사용한다. `useState`는 인자로 initial state를 받고 value와 setter를 반환하는 전형적인 형태이다.
+
+```jsx
+function App() {
+  // [value, setter] = useState(initialState);
+  const [count, setCount] = useState(0);
+
+  console.log("컴포넌트 호출!");
+  console.log(`현재 count: ${count}`);
+
+  return (
+    <div>
+      {/* 버튼 클릭시 count - 1 */}
+      <CustomButton onClick={() => setCount(count - 1)}>
+        -
+      </CustomButton>
+      {/* 화면에 count 표시 */}
+      <span>{count}</span>
+      {/* 버튼 클릭시 count + 1 */}
+      <CustomButton onClick={() => setCount(count + 1)}>
+        +
+      </CustomButton>
+    </div>
+  );
+}
+
+...
+```
+- "-" button을 누르면 `count - 1` 값으로 count state를 변경하고, "+" button을 누르면 `count + 1`로 변경한다.
+- `setCount`를 통해 count state가 변경되면 컴포넌트는 자동으로 리렌더링돼서 화면에 변경된 `count` 값을 표시한다.
+- state가 변경될 때마다 App 컴포넌트가 호출돼 console log가 찍히게 된다.
+
+<CodeSandbox codeSandboxId='react-state-lhc4c9'/>
+
+### Computed
+
+React의 computed는 `useMemo`와 `useCallack`가 존재한다. 둘 다 계산함수, 의존성 배열을 인자로 받아서 `useMemo`는 계산함수의 return 값, `useCallback`은 계산함수 자체를 캐싱한다. 예시에서는 `useMemo`만 사용했다.
+
+```jsx
+function App() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <div>
+        <CustomButton onClick={() => setCount(count - 1)}>-</CustomButton>
+        <span>{count}</span>
+        <CustomButton onClick={() => setCount(count + 1)}>+</CustomButton>
+      </div>
+      <FizzBuzz count={count} />
+    </div>
+  );
+}
+
+function FizzBuzz({ count }) {
+  const fizzBuzz = useMemo(
+    // 계산 함수
+    () => {
+      console.log('fizzBuzz 계산!');
+
+      return count ? `${(count % 3 === 0) ? 'Fizz' : ''}${(count % 5 === 0) ? 'Buzz' : ''}` : '';
+    },
+    // 의존성 배열
+    [count]
+  );
+  const fizzBuzzDouble = useMemo(() => {
+    console.log('fizzBuzzDouble 계산!');
+
+    return fizzBuzz.repeat(2);
+  }, [fizzBuzz]);
+
+  return (
+    <div>
+      <p>fizzBuzz: {fizzBuzz}</p>
+      <p>fizzBuzzDouble: {fizzBuzzDouble}</p>
+    </div>
+  )
+}
+
+...
+```
+- `count`가 변경될 때 `fizzBuzz`는 재계산되므로 log가 찍히지만 `fizzBuzzDouble`은 `fizzBuzz` 값이 변경될 때만 log를 찍히는 걸 볼 수 있다. 의존성으로 `fizzBuzz` 값만 가지고 있기 때문에 `fizzBuzz` 값이 변하는 게 아니라면 재계산을 하지 않기 때문이다.
+
+<CodeSandbox codeSandboxId='react-computed-mfktjh'/>
+
+## Andorid(Jetpack Compose)
+
+> Jetpack Copmose 공식 문서에서는 `component` 대신 `widget` or `Composable`, 렌더링 대신 `composition`이라 표현한다. 하지만 그냥 용어를 통일해서 사용하겠다.
+
+### Component
+
+Jetpack Compose의 Component는 Composable annotation을 붙인 함수로 표현한다.
+
+- `children`은 함수 body에서 호출한 다른 Component들이 되며, body 내부이기만 하면 되기 때문에 children 선언에 대한 위치가 매우 자유롭다.
+- `property`는 함수 parameter로 넘기면 되며 property를 위해 특이하게 처리되는 부분이 없다.
+
+```kotlin
+// App component
+@Composable
+fun App() {
+  Row {
+    // onClick, content property 넘기기
+    CustomButton(onClick = { Log.i("click", "decrease") }) {
+      Text(text = "-")
+    }
+    Text(text = "0")
+
+    val data = foo()
+    val data2 = bar()
+    // 기타 무수히 많은 로직...
+
+    // 여기서 다시 컴포넌트를 호출해도 children tree에 포함된다.
+    CustomButton(onClick = { Log.i("click", "increase") }) {
+      Text(text = "+")
+    }
+  }
+}
+
+// onClick, content property를 parameter로 받아옴
+@Composable
+fun CustomButton(onClick: () -> Unit, content: @Composable RowScope.() -> Unit) {
+  Button(
+    onClick = onClick,
+    modifier = Modifier.wrapContentSize(),
+    contentPadding = PaddingValues(18.dp, 12.dp),
+    content = content
+  )
+}
+```
+- `Column`, `Button`, `Text`는 Jetpack Compose가 제공하는 built-in component이다.
+- 버튼에는 `App` 컴포넌트가 property로 넘긴 content가 보이며, 클릭하면 property의 `onClick` 함수가 실행되어 log가 찍히게 된다.
+- 컴포넌트 호출 사이에 로직이 아무리 길어도 컴포넌트는 전부 `children`에 호출된 순서로 추가되게 된다.
+- `CustomButton`의 `modifier`, `contentPadding`은 component 예시를 위해 세팅해 둔 것이고 중요한 게 아니니 무시하자.
+
+### State
+
+State는 단순 data getter, setter 외에도 두 가지 기능을 하는데 data의 캐싱과 data 변경의 알림이다.
+Jetpack Compose도 React와 동일하게 상태가 변경되면 framework에게 알릴 수 있어야 하고, 리렌더링시에 함수가 재실행되기 때문에 상태값을 캐싱할 수 있어야 한다.
+
+Jetpack Compose는 그 두 가지 기능을 하나의 상태 함수로 구현한게 아니라 별도로 구현해 두었다.
+
+#### remember
+
+`remember`는 컴포넌트의 생명주기 동안 계속 값을 유지할 수 있도록 캐싱해 주는 역할을 한다. state가 아니어도 다 저장할 수 있으며 명시적으로 캐싱에 대한 의존성을 추가해 줄 수도 있다.
+
+#### mutableStateOf
+
+`mutableStateOf`는 컴포넌트의 data(state)를 관리하고 변경에 대한 알림을 해주는 역할을 한다. `MutableStateImpl` 객체 내부에 state value를 저장해 두며, value의 변경이 있을 때 framework에게 알려 컴포넌트 리렌더링을 발생시킨다.
+
+```kotlin
+@Composable
+fun App() {
+  val (count, setCount) = remember { mutableStateOf(0) }
+  // val count by remember { mutableStateOf(0) }
+  // val count = remember { mutableStateOf(0) }
+
+  Log.i("call", "컴포넌트 호출!")
+  Log.i("call", "현재 count: $count")
+
+  Column {
+    Row {
+      CustomButton(onClick = { setCount(count - 1) }) {
+        Text(text = "-")
+      }
+      Text(text = "$count")
+      CustomButton(onClick = { setCount(count + 1) }) {
+        Text(text = "+")
+      }
+    }
+    Datetime(count = count)
+  }
+}
+
+@Composable
+fun Datetime(count: Int) {
+  val initialDatetime = remember { getCurrentDatetime() }
+  val currentDatetime = remember(count) { getCurrentDatetime() }
+
+  Column {
+    Text(text = "initialDatetime=$initialDatetime")
+    Text(text = "currentDatetime=$currentDatetime")
+  }
+}
+
+...
+```
+
+- state는 kotlin의 특성을 살려서 다양한 형태로 선언할 수 있다.
+- `setCount`를 호출해 count state가 변경되면 App 컴포넌트를 리렌더링해 UI가 변경된다.
+- 리렌더링시에 App 컴포넌트는 재호출되기 때문에 log가 찍히게 된다.
+- `initialDatetime`은 의존성이 없으므로 컴포넌트 mount 시점의 값이 계속 유지된다.
+- `currentDatetime`은 `count` property에 의존성을 갖기 때문에 `count`가 업데이트된다면 재계산한다.
+
+<a href='/declarative-ui/remember.gif' target='_blank'>
+  <figure>
+    <img src='/declarative-ui/remember.gif' height='600' />
+    <figcaption>example</figcaption>
+  </figure>
+</a>
+
+### Computed
+
+Computed는 위 State 섹션에서 이미 코드가 나왔지만, `remember` 함수로 처리된다. computed의 의존성을 그대로 `remember`의 의존성으로 넘겨서 캐싱 처리한다.
+
+## iOS (SwiftUI)
+
+> SwiftUI 공식 문서에서는 `component` 대신 `view`라 표현한다. 하지만 용어를 통일해서 사용하겠다.
+
+### Component
+
+SwiftUI의 Component는 `View` protocol을 adopt한 `struct`로 표현한다.
+
+- `children` 선언은 body property의 value가 된다.
+- `property`는 struct의 property를 그대로 받게 된다.
+
+```swift
+// App Component
+struct MainApp: View {
+  // children tree
+  var body: some View {
+    HStack {
+      CustomButton(onClick: { print("decrease") }) {
+        Text("-")
+      }
+      Text("0")
+      CustomButton(onClick: { print("increase") }) {
+        Text("+")
+      }
+    }
+  }
+}
+
+// CustomButton component
+struct CustomButton<Content: View>: View {
+  // onClick property
+  var onClick: () -> Void
+  // CustomButton children property
+  @ViewBuilder var label: () -> Content
+
+  // children
+  var body: some View {
+    Button(action: onClick, label: label)
+      .padding()
+      .background(Color.blue)
+      .foregroundColor(Color.white)
+      .cornerRadius(16)
+  }
+}
+```
+- `HStack`, `Button`, `Text`은 SwiftUI가 제공하는 built-in component이다.
+- `CustomButton`을 클릭하면 `MainApp` 컴포넌트가 property로 넘긴 `onClick` 함수가 실행되어 `print` 된다.
+
+<figure>
+  <img src='/declarative-ui/property.gif' height='600' />
+  <figcaption>print</figcaption>
+</figure>
+
+### State
+
+SwiftUI의 state는 property에 `@State` annotation을 붙이는 형태로 생성한다. 주의할 점이 있다면 component property로 state 값이 설정되는 걸 막기 위해 private로 선언해줘야 한다는 점이다.
+
+```swift
+struct MainApp: View {
+  // state annotation
+  @State private var count: Int = 0
+
+  var body: some View {
+    VStack {
+      HStack {
+        CustomButton(onClick: { count -= 1 }) {
+          Text("-")
+        }
+        Text("\(count)")
+        CustomButton(onClick: { count += 1 }) {
+          Text("+")
+        }
+      }
+      FizzBuzz(value: count)
+    }
+  }
+}
+
+struct FizzBuzz: View {
+    var value: Int
+    
+    var body: some View {
+        var fizzBuzz = ""
+
+        if value != 0 {
+          if value % 3 == 0 {
+              fizzBuzz += "Fizz"
+          }
+
+          if value % 5 == 0 {
+              fizzBuzz += "Buzz"
+          }
+        }
+
+        return Text("fizzBuzz: \(fizzBuzz)")
+    }
+}
+
+...
+```
+
+<figure>
+  <img src='/declarative-ui/state.gif' height='600' />
+  <figcaption>Counter + FizzBuzz</figcaption>
+</figure>
+
+SwiftUI는 컴포넌트 value 레벨에서의 `Computed`를 명시적으로 지원해 주지 않는다. 대신 별도 view model 혹은 `EquatableView`로 비슷한 처리가 가능하다.
+
+> 위 예시에서는 State만 단독으로 다뤘지만 Jetpack Compose와 SwiftUI는 보통 MVVM을 채택해 view model을 같이 사용한다.
+
+# 고찰
+
+Declarative UI에 대해 풀어봤다.
+UI 기술 기반에 대한 이해가 있다 해도 렌더링 방식, 권장하는 data의 구성 방식, app의 기반이 되는 아키텍처는 플랫폼마다 환경마다 다르니 또 그에 맞는 이해와 생각이 많이 필요할 것이다.
+
+하지만 UI 기술에 대한 큰 흐름은 비슷하니 이에 대한 이해가 있다면 빠르게 적응해 능숙해질 수 있을 거로 생각한다.
+
+# 참고
+- [Android Jetpack Compose Document](https://developer.android.com/jetpack/compose)
+- [iOS SwiftUI Document](https://developer.apple.com/documentation/swiftui/)
+- [2cs24 Declarative](https://www.csc.liv.ac.uk/~frans/OldLectures/2CS24/declarative.html)
+- ['Declarative Thinking, Declarative Practice' - Kevlin Henney [ ACCU 2016 ]](https://www.youtube.com/watch?v=nrVIlhtoE3Y)
