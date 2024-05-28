@@ -1,7 +1,7 @@
 ---
-title: '리액트 서버 컴포넌트(RSC) 이모저모 알아보기'
+title: 'React Server Component 이모저모 알아보기'
 date: '2023-08-22'
-preview: 'React Server Component과 지탱하는 기술을 다룹니다.'
+preview: 'React Server Component와 지탱하는 기술을 다룹니다.'
 tag: ['javascript', 'react', 'rsc', 'server component', 'react component', 'react server component', 'next.js', 'app router']
 ---
 
@@ -10,13 +10,13 @@ import TableOfContents from '../components/blog/TableOfContents.tsx';
 
 <TableOfContents headings={props.headings} />
 
-> 해당 글은 Next.js(app router, dynamic rendering)를 사용한다는 전제로 작성되어 있습니다. RSC의 동작과 구현은 프레임워크, 렌더링 방식 별로 다를 수 있습니다.
+> 해당 글은 Next.js Server Component(app router, dynamic rendering)를 사용한다는 전제로 작성되어 있습니다. RSC의 동작과 구현은 프레임워크, 렌더링 방식 별로 다를 수 있습니다.
 
-RSC가 Next.js를 통해 릴리즈된 지 어느덧 꽤 시간이 지났다. stable 릴리즈 이후에 RSC를 다룬 국내 아티클이 나온게 별로 안보여서 이모저모 써보려 한다.
+React Server Component가 Next.js를 통해 릴리즈된 지 어느덧 꽤 시간이 지났다. stable 릴리즈 이후에 RSC를 다룬 국내 아티클이 나온게 별로 안보여서 이모저모 써보려 한다.
 
 # RSC를 지탱하는 기술들
 
-RSC에 대해 알아보기 전에 RSC를 지탱해 주는 여러 가지 기술들이 있다. 그 기술들을 먼저 간략하게 알아보자.
+React Server Component에 대해 알아보기 전에 RSC를 지탱해 주는 여러 가지 기술들이 있다. 그 기술들을 먼저 간략하게 알아보자.
 - Server-side Rendering (SSR)
 - Concurrent Rendering
 - Streaming SSR
@@ -102,7 +102,7 @@ hooks로 function component가 자연스럽게 stateful/stateless 변환을 하�
 
 # 리액트 서버 컴포넌트
 
-RSC는 서버에서 실행되는 component <b>"서버의 컴포넌트화"</b>이다.
+React Server Component는 서버에서 실행되는 component <b>"서버의 컴포넌트화"</b>이다.
 
 기존 React Component는 클라이언트만을 컴포넌트화했다. 웹 클라이언트에서 하던 것처럼 DOM을 핸들링하고 Browser API를 사용한다. RSC는 서버를 컴포넌트화했고 서버에서 실행된다. 서버에서 하던 것처럼 서버 영역 데이터를 직접 접근하고, cors에서 자유롭고, 서버에서 UI를 응답한다. server component와 client component는 각기 다른 영역을 컴포넌트화했기 때문에 서로 다른 전문 분야를 가지고 있다.
 
@@ -136,7 +136,7 @@ Server Tree가 추가됨에 따라 기존 React Tree를 Client Tree라고 바꿔
 
 ## 제2의 PHP?
 
-RSC와 관련해서 출시 초기에 제2의 PHP, Rails 같은 반응을 많이 보았다. 많이 다르지만 단순 RSC 기능만 놓고 본다면 "(전체 새로고침을 하지 않는) 제2의 PHP"로 봐도 될 것 같다.
+React Server Component와 관련해서 출시 초기에 제2의 PHP, Rails 같은 반응을 많이 보았다. 많이 다르지만 단순 RSC 기능만 놓고 본다면 "(전체 새로고침을 하지 않는) 제2의 PHP"로 봐도 될 것 같다.
 
 React 팀은 서버로 환경을 확장하면서 올드 스쿨 MPA 웹의 장점을 React에 녹여내고 싶어 했다. 당시에는 SPA 같은 거 없이 다 SSR이고 프론트엔드 개발이라는 게 자리 잡지 않았기 때문에 장점들이 제대로 인정받지 못한 것 같지만, 최신 웹과 비교했을 때 올드 스쿨 웹은 <b>client 측면에서 매우 단순한 요청/응답 멘탈모델</b>을 가지고 있다.
 
@@ -331,7 +331,7 @@ Server Component는 위 장점들과 서버 비용 + 구성에 대한 복잡도�
 
 # 고찰
 
-RSC의 진면목은 서버에서 실행되는 기능이 아니라 server/client가 React 안에서 자연스럽게 결합한다는 것이라 생각하고, Component 모델을 서버로 확장했다는 점에서 굉장히 React스럽게 기능을 잘 만들었다는 생각이 든다. (+ 기존에 meta framework level(`getServerSideProps`, `loader`)에서 처리하던 걸 React level로 가져왔다는 점)
+React Server Component의 진면목은 서버에서 실행되는 기능이 아니라 server/client가 React 안에서 자연스럽게 결합한다는 것이라 생각하고, Component 모델을 서버로 확장했다는 점에서 굉장히 React스럽게 기능을 잘 만들었다는 생각이 든다. (+ 기존에 meta framework level(`getServerSideProps`, `loader`)에서 처리하던 걸 React level로 가져왔다는 점)
 
 많은 이점을 제공해도 그에 맞는 trade-off가 있기 때문에 무작정 사용하기보다는 우선 장단점을 고려해서 프로젝트에 적합한지 생각하는 게 중요할 것 같고, 글을 올리는 날 기준으로도 아직 제대로 지원하지 않는 lib이 정말 많고 Next.js 레벨에서는 caching 관련으로 원성을 사고 있다. 환경이 성숙해지기 전까지는 제품 레벨에서는 굳이 쓰지 않아도 될 것 같다.
 
