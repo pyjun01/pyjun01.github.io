@@ -1,5 +1,4 @@
 import { graphql } from 'gatsby';
-import { MDXRenderer } from 'gatsby-plugin-mdx';
 import { MDXProvider } from '@mdx-js/react';
 import styled from 'styled-components';
 import { Tweet, CodeSandbox } from 'mdx-embed';
@@ -9,6 +8,7 @@ import SEO from '../../components/seo';
 import CodeBlock from '../../components/MDX/CodeBlock';
 import { H1, H2, H3, H4, H5, H6 } from '../../components/MDX/Title';
 import { A } from '../../components/MDX';
+import TableOfContents from '../../components/blog/TableOfContents';
 
 const components = {
   Tweet,
@@ -63,10 +63,10 @@ const Container = styled.div`
   }
 `;
 
-function BlogPost({ data }) {
+function BlogPost({ data, children }) {
   return (
     <Layout pageTitle={data.mdx.frontmatter.title}>
-      <SEO title={data.mdx.frontmatter.title} description={data.mdx.frontmatter.preview} slug={data.mdx.slug} />
+      <SEO title={data.mdx.frontmatter.title} description={data.mdx.frontmatter.preview} slug={data.mdx.frontmatter.slug} />
       <Container>
         <h2>{data.mdx.frontmatter.title}</h2>
         <p className='date'>{data.mdx.frontmatter.date}</p>
@@ -81,15 +81,16 @@ function BlogPost({ data }) {
               h4: H4,
               h5: H5,
               h6: H6,
+              TableOfContents: (props) => <TableOfContents {...props} headings={data.mdx.headings} />,
               ...components,
             }}
           >
-            <MDXRenderer headings={data.mdx.headings}>{data.mdx.body}</MDXRenderer>
+            {children}
           </MDXProvider>
         </div>
       </Container>
       <img
-        src={`https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fpyjun01.github.io/v/${data.mdx.slug}&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false`}
+        src={`https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fpyjun01.github.io/v/${data.mdx.frontmatter.slug}&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false`}
         style={{ opacity: 0 }}
       />
     </Layout>
@@ -99,19 +100,17 @@ function BlogPost({ data }) {
 export const query = graphql`
   query ($id: String) {
     mdx(id: { eq: $id }) {
-      id
       frontmatter {
         title
         date(formatString: "MMMM D, YYYY")
         preview
         tag
+        slug
       }
       headings {
-        depth
         value
+        depth
       }
-      body
-      slug
     }
   }
 `;

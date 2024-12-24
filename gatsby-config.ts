@@ -1,35 +1,33 @@
-const { trackingId } = require('./key.json');
+import path from 'path';
 
-module.exports = {
+/** @type {import('gatsby').GatsbyConfig} */
+const config = {
   siteMetadata: {
     description: 'pyjun01 블로그',
     siteUrl: 'https://pyjun01.github.io',
   },
   trailingSlash: 'always',
   plugins: [
+    {
+      resolve: 'gatsby-plugin-typescript',
+      options: {
+        isTSX: true,
+        allExtensions: true,
+        jsxPragma: `jsx`, // defaults to "React"
+      },
+    },
     'gatsby-plugin-sitemap',
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-styled-components',
     'gatsby-plugin-image',
     'gatsby-plugin-sharp',
     'gatsby-transformer-sharp',
-    {
-      resolve: 'gatsby-plugin-typescript',
-      options: {
-        isTSX: true, // defaults to false
-        jsxPragma: `jsx`, // defaults to "React"
-        allExtensions: true, // defaults to false
-      },
-    },
     'gatsby-plugin-mdx',
-    {
-      resolve: 'gatsby-plugin-mdx-frontmatter',
-    },
     {
       resolve: 'gatsby-source-filesystem',
       options: {
         name: 'blog',
-        path: `${__dirname}/src/blog`,
+        path: path.resolve('./src/blog'),
       },
     },
     {
@@ -40,3 +38,5 @@ module.exports = {
     },
   ],
 };
+
+export default config;

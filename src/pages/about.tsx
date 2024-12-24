@@ -1,12 +1,8 @@
 import { Helmet } from 'react-helmet';
 
-import { usePostList } from '../hooks/post';
 import Layout from '../components/layout';
-import List from '../components/List';
 
 function IndexPage() {
-  const data = usePostList();
-
   return (
     <Layout path='/about'>
       <Helmet

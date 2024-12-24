@@ -3,16 +3,14 @@ import { graphql, useStaticQuery } from 'gatsby';
 export const usePostList = () => {
   const data = useStaticQuery(graphql`
     query {
-      allMdx(sort: { fields: frontmatter___date, order: DESC }) {
+      allMdx(sort: { frontmatter: { date: DESC } }) {
         nodes {
           frontmatter {
             title
-            date(formatString: "LL")
             preview
-            tag
+            slug
+            date(formatString: "LL")
           }
-          id
-          slug
         }
       }
     }

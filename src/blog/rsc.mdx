@@ -3,12 +3,10 @@ title: 'React Server Component 이모저모 알아보기'
 date: '2023-08-22'
 preview: 'React Server Component와 지탱하는 기술을 다룹니다.'
 tag: ['javascript', 'react', 'rsc', 'server component', 'react component', 'react server component', 'next.js', 'app router']
+slug: 'rsc'
 ---
 
-import TableOfContents from '../components/blog/TableOfContents.tsx';
-
-
-<TableOfContents headings={props.headings} />
+<TableOfContents />
 
 > 해당 글은 Next.js Server Component(app router, dynamic rendering)를 사용한다는 전제로 작성되어 있습니다. RSC의 동작과 구현은 프레임워크, 렌더링 방식 별로 다를 수 있습니다.
 
@@ -285,7 +283,7 @@ export default function ClientComponent({ children }) {
 
 둘은 서로 다른 목적과 개념을 가지고 있다. 요청에 맞는 HTML 생성이 목적인 dynamic rendering과 server에서 실행되는 component가 목적인 RSC는 서로 대체할 수 있는 게 아닌 <b>상호보완적인 관계</b>에 가깝다.
 
-이 부분은 app router가 기본으로 dynamic rendering 처리를 해줘서 많은 사람이 헷갈려 하는데 <b style="color: #1971c2">server component</b>가 SSR을 하는 건 맞지만, SSR의 결과물은 기본적으로 HTML이 아닌 UI description(`["$","div",null,{"children":[...]}]`)이다. RSC 개념에 SSR은 들어가 있지만 dynamic rendering은 들어가 있지 않은 것이다. (<b style="color: #2f9e44">client component</b>는 당연하게도 CSR만 한다)
+이 부분은 app router가 기본으로 dynamic rendering 처리를 해줘서 많은 사람이 헷갈려 하는데 <b style={{color: "#1971c2"}}>server component</b>가 SSR을 하는 건 맞지만, SSR의 결과물은 기본적으로 HTML이 아닌 UI description(`["$","div",null,{"children":[...]}]`)이다. RSC 개념에 SSR은 들어가 있지만 dynamic rendering은 들어가 있지 않은 것이다. (<b style={{color: "#2f9e44"}}>client component</b>는 당연하게도 CSR만 한다)
 
 그렇기 때문에 RSC를 사용하더라도 dynamic rendering이 필요하다면 여전히 dynamic rendering 처리를 해주어야 하며 아직 유효한 기술이다.
 

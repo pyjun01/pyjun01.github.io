@@ -39,9 +39,9 @@ function List({ nodes }) {
   return (
     <ListContainer>
       {nodes.map((node) => (
-        <Item key={node.id}>
+        <Item key={node.slug}>
           <h2>
-            <Link to={`/v/${node.slug}/`}>{node.frontmatter.title}</Link>
+            <Link to={`/v/${node.frontmatter.slug}/`}>{node.frontmatter.title}</Link>
           </h2>
           <p>
             {node.frontmatter.preview} - {node.frontmatter.date}

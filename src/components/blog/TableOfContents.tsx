@@ -1,8 +1,8 @@
 import React from 'react';
 
 import GithubSlugger from 'github-slugger';
-import { Link } from 'gatsby';
 import styled from 'styled-components';
+import { Headings } from '../../utils/type';
 
 const { slug } = GithubSlugger;
 
@@ -19,10 +19,10 @@ const Item = styled.li<{ depth: number }>`
   margin-left: ${({ depth }) => `${(depth - 1) * 20}px`};
 `;
 
-function TableOfContents({ headings }: { headings: Array<{ depth: number; value: string }> }) {
+function TableOfContents({ headings }: { headings: Headings }) {
   return (
     <TableOfContentsWrapper>
-      {headings.map((heading) => (
+      {headings?.map((heading) => (
         <Item key={heading.value} depth={heading.depth}>
           <a href={`#${slug(heading.value)}`}>{heading.value}</a>
         </Item>
