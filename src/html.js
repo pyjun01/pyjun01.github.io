@@ -27,11 +27,6 @@ export default function HTML(props) {
         <meta property='og:locale' content='ko_KR' />
         <meta name='theme-color' content='#1a5b89' />
         <meta name='naver-site-verification' content='2a28f13354877854bb05feb3be7bf8f34ff88f05' />
-        <script
-          async
-          src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5121982141414734'
-          crossOrigin='anonymous'
-        ></script>
         <script async src='https://www.googletagmanager.com/gtag/js?id=G-M9E84M22QJ'></script>
         <script dangerouslySetInnerHTML={{ __html: googleAnalytics }} />
         {props.headComponents}
